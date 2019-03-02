@@ -39,4 +39,5 @@ sub loadlib {
 	require AntiCaptcha;
 	require File;
 	require PlayServer;
+	require WebService::Antigate::V2;
 }
