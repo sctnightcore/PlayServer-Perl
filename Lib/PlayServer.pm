@@ -2,7 +2,6 @@ package PlayServer;
 use strict;
 use JSON;
 use HTTP::Tiny;
-use Data::Dumper;
 sub getimg_saveimg {
 	my ($server) = @_;
 	my $get_img = HTTP::Tiny->new()->request('POST', "http://playserver.co/index.php/Vote/ajax_getpic/$server");

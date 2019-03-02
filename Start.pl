@@ -1,5 +1,4 @@
 use strict;
-use threads;
 use Config::IniFiles;
 use FindBin qw( $RealBin );
 use lib "$RealBin/Lib";
@@ -16,6 +15,7 @@ my $antikey = $cfg->val('Setting','AntiCaptchakey');
 
 main();
 sub main {
+	loadlib();
 	print "================================\n";
 	print "PlayServer-Perl\n";
 	print "By sctnightcore\n";
@@ -29,4 +29,14 @@ sub main {
 		print "Wait 61 sec\n";
 		sleep 61;
 	}
+}
+
+
+sub loadlib {
+	require Config::IniFiles;
+	require HTTP::Tiny;
+	require JSON;
+	require AntiCaptcha;
+	require File;
+	require PlayServer;
 }
