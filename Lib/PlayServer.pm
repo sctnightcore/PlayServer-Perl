@@ -28,9 +28,9 @@ sub send_answer {
 	if ($send_answer->{success}) {
 		my $jsontwo = decode_json($send_answer->{content});
 		if ($jsontwo->{'success'} eq JSON::true) {
-			printf("[Money:%s]->[Success] %5s.png | %6s | %3s\n",$b,$checksum,$ans,"61");
+			printf("[Money:%s] | [Success] | %5s.png | %6s | Wait:%3s|\n",$b,$checksum,$ans,$jsontwo->{'wait'});
 		 } else {
-		 	printf("[Money:%s]->[Fail] %5s.png | %6s | %3s\n",$b,$checksum,$ans,"61");
+		 	printf("[Money:%s] | [Fail] | %5s.png | %6s | Wait:%3s|\n",$b,$checksum,$ans,$jsontwo->{'wait'});
 		 }
 	}
 }

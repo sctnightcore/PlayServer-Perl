@@ -26,7 +26,6 @@ sub main {
 		my ($ans,$b) = AntiCaptcha::anti_captcha($checksum,$antikey); # get ans 
 		PlayServer::send_answer($ans,$checksum,$server,$gameid,$serverid,$b); #send ans
 		File::file_remove($checksum);
-		print "Wait 61 sec\n";
 		sleep 61;
 	}
 }
