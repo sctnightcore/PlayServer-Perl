@@ -2,6 +2,7 @@ package PlayServer;
 use strict;
 use JSON;
 use HTTP::Tiny;
+
 sub getimg_saveimg {
 	my ($server) = @_;
 	my $get_img = HTTP::Tiny->new()->request('POST', "http://playserver.co/index.php/Vote/ajax_getpic/$server");
@@ -27,7 +28,7 @@ sub send_answer {
 	});
 	if ($send_answer->{success}) {
 		my $jsontwo = decode_json($send_answer->{content});
-		if ($jsontwo->{'success'} eq JSON::true) {
+		if ($jsontwo->{'success'} eq '1') {
 			printf("[Money:%s] | [Success] | %5s.png | %6s | Wait:%3s|\n",$b,$checksum,$ans,$jsontwo->{'wait'});
 		 } else {
 		 	printf("[Money:%s] | [Fail] | %5s.png | %6s | Wait:%3s|\n",$b,$checksum,$ans,$jsontwo->{'wait'});
