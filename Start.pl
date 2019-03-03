@@ -14,9 +14,6 @@ my $serverid = $cfg->val('Setting','SERVERID');
 my $gameid = $cfg->val( 'Setting', 'GAMEID' );
 my $antikey = $cfg->val('Setting','AntiCaptchakey');
 my $CONSOLE = new Win32::Console();
-my $sizecount = scalar(@count) ? scalar(@count) : 0;
-my $sizesuccess = scalar(@success) ? scalar(@success) : 0;
-my $sizefail = scalar(@fail) ? scalar(@fail) : 0;
 
 main();
 sub main {
@@ -27,17 +24,17 @@ sub main {
 	print "By sctnightcore\n";
 	print "================================\n";
 	my $nextruntime = 0;
-	$CONSOLE->Title("[Count]: ".$sizecount." | [Success]: ".$sizesuccess." | [Fail]: ".$sizefail." | BY sctnightcore");
+	$CONSOLE->Title("[Count]: ".scalar(@count)." | [Success]: ".scalar(@success)." | [Fail]: ".scalar(@fail)." | BY sctnightcore");
 	while () {
 		my $checksum = PlayServer::getimg_saveimg($server); #get img 
-		sleep 0.5;
 		my ($ans,$b) = AntiCaptcha::anti_captcha($checksum,$antikey); # get ans
+		sleep 0.5;
 		File::file_remove($checksum);
 		if(time() >= $nextruntime) {
-				PlayServer::send_answer($ans,$checksum,$server,$gameid,$serverid,$b);
-				$nextruntime = time()+61;
+				my $time = PlayServer::send_answer($ans,$checksum,$server,$gameid,$serverid,$b);
+				$nextruntime = time() + $time;
 		}
-		$CONSOLE->Title("[Count]: ".$sizecount." | [Success]: ".$sizesuccess." | [Fail]: ".$sizefail." | By sctnightcore");
+		$CONSOLE->Title("[Count]: ".scalar(@count)." | [Success]: ".scalar(@success)." | [Fail]: ".scalar(@fail)." | By sctnightcore");
 	}
 }
 

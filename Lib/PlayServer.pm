@@ -37,6 +37,8 @@ sub send_answer {
 			push @fail,'1';		 	
 		 	printf("[Money:%s] | \e[0;31m[Fail]\e[0m | %5s.png | %6s | Wait:%3s|\n",$b,$checksum,$ans,$jsontwo->{'wait'});
 		 }
+		my $time = $jsontwo->{'wait'};
+		return $time; 
 	}
 }
 
