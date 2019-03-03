@@ -14,6 +14,9 @@ my $serverid = $cfg->val('Setting','SERVERID');
 my $gameid = $cfg->val( 'Setting', 'GAMEID' );
 my $antikey = $cfg->val('Setting','AntiCaptchakey');
 my $CONSOLE = new Win32::Console();
+my $sizecount = scalar(@count) ? scalar(@count) : 0;
+my $sizesuccess = scalar(@success) ? scalar(@success) : 0;
+my $sizefail = scalar(@fail) ? scalar(@fail) : 0;
 
 main();
 sub main {
@@ -23,8 +26,8 @@ sub main {
 	print "PlayServer-Perl\n";
 	print "By sctnightcore\n";
 	print "================================\n";
-	my $nextruntime=0;
-	$CONSOLE->Title("[Count]: 0 | [Success]: 0 | [Fail]: 0 | BY sctnightcore");
+	my $nextruntime = 0;
+	$CONSOLE->Title("[Count]: ".$sizecount." | [Success]: ".$sizesuccess." | [Fail]: ".$sizefail." | BY sctnightcore");
 	while () {
 		my $checksum = PlayServer::getimg_saveimg($server); #get img 
 		sleep 0.5;
@@ -34,9 +37,6 @@ sub main {
 				PlayServer::send_answer($ans,$checksum,$server,$gameid,$serverid,$b);
 				$nextruntime = time()+61;
 		}
-		my $sizecount = scalar(@count);
-		my $sizesuccess = scalar(@success);
-		my $sizefail = scalar(@fail);
 		$CONSOLE->Title("[Count]: ".$sizecount." | [Success]: ".$sizesuccess." | [Fail]: ".$sizefail." | By sctnightcore");
 	}
 }
