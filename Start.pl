@@ -18,6 +18,7 @@ my $CONSOLE = new Win32::Console();
 main();
 sub main {
 	loadlib();
+	system $^O eq 'MSWin32' ? 'cls' : 'clear';
 	print "================================\n";
 	print "PlayServer-Perl\n";
 	print "By sctnightcore\n";
