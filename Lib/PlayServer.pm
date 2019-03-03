@@ -6,13 +6,13 @@ use Win32::Console::ANSI;
 use Var qw(@count @success @fail);
 sub getimg_saveimg {
 	my ($server) = @_;
-	my $get_img = HTTP::Tiny->new()->request('POST', "http://playserver.co/index.php/Vote/ajax_getpic/$server");
+	my $get_img = HTTP::Tiny->new( timeout => 10 )->request('POST', "http://playserver.co/index.php/Vote/ajax_getpic/$server");
 	if ($get_img->{success}) {
 		my $jsonone = decode_json($get_img->{content});
 		my $checksum = $jsonone->{'checksum'};
 #save img
 		my $url = "http://playserver.co/index.php/VoteGetImage/$checksum";
-		my $saveimg = HTTP::Tiny->new()->mirror($url, "img/$checksum.png");
+		my $saveimg = HTTP::Tiny->new( timeout => 10 )->mirror($url, "img/$checksum.png");
 		return ($checksum);
 	}
 }
@@ -21,7 +21,7 @@ sub getimg_saveimg {
 sub send_answer {
 	my ($ans,$checksum,$server,$gameid,$serverid,$b) = @_;
 	my $www_sendanswer = "http://playserver.co/index.php/Vote/ajax_submitpic/$server";
-	my $send_answer = HTTP::Tiny->new()->request('POST', $www_sendanswer, {
+	my $send_answer = HTTP::Tiny->new( timeout => 10 )->request('POST', $www_sendanswer, {
 	  content => "server_id=$serverid&captcha=$ans&gameid=$gameid&checksum=$checksum",
 	  headers => { 
 	  	'content-type' => 'application/x-www-form-urlencoded',
