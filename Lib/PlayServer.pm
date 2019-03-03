@@ -21,7 +21,7 @@ sub getimg_saveimg {
 sub send_answer {
 	my ($ans,$checksum,$server,$gameid,$serverid,$b) = @_;
 	my $www_sendanswer = "http://playserver.co/index.php/Vote/ajax_submitpic/$server";
-	my $send_answer = HTTP::Tiny->new->request('POST', $www_sendanswer, {
+	my $send_answer = HTTP::Tiny->new()->request('POST', $www_sendanswer, {
 	  content => "server_id=$serverid&captcha=$ans&gameid=$gameid&checksum=$checksum",
 	  headers => { 
 	  	'content-type' => 'application/x-www-form-urlencoded',
