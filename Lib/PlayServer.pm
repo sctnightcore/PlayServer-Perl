@@ -2,6 +2,7 @@ package PlayServer;
 use strict;
 use JSON;
 use HTTP::Tiny;
+use Win32::Console::ANSI;
 
 sub getimg_saveimg {
 	my ($server) = @_;
@@ -29,9 +30,9 @@ sub send_answer {
 	if ($send_answer->{success}) {
 		my $jsontwo = decode_json($send_answer->{content});
 		if ($jsontwo->{'success'} eq '1') {
-			printf("[Money:%s] | [Success] | %5s.png | %6s | Wait:%3s|\n",$b,$checksum,$ans,$jsontwo->{'wait'});
+			printf("[Money:%s] | \e[0;32m[Success]\e[0m | %5s.png | %6s | Wait:%3s|\n",$b,$checksum,$ans,$jsontwo->{'wait'});
 		 } else {
-		 	printf("[Money:%s] | [Fail] | %5s.png | %6s | Wait:%3s|\n",$b,$checksum,$ans,$jsontwo->{'wait'});
+		 	printf("[Money:%s] | \e[0;31m[Fail]\e[0m | %5s.png | %6s | Wait:%3s|\n",$b,$checksum,$ans,$jsontwo->{'wait'});
 		 }
 	}
 }

@@ -39,4 +39,6 @@ sub loadlib {
 	require File;
 	require PlayServer;
 	require WebService::Antigate::V2;
+	require Win32::Console::ANSI;
+
 }
