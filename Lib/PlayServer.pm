@@ -40,7 +40,7 @@ sub send_answer {
 			push @fail,'1';	 	
 		 }
 		my $time = $jsontwo->{'wait'};
-		return $time; 
+		return $time;
 	} else {
 		print "Cannot send Answer!\n";
 		return;
