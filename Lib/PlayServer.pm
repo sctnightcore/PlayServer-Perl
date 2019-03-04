@@ -11,10 +11,12 @@ sub getimg_saveimg {
 	if ($get_img->{success}) {
 		my $jsonone = decode_json($get_img->{content});
 		my $checksum = $jsonone->{'checksum'};
-#save img
 		my $url = "http://playserver.co/index.php/VoteGetImage/$checksum";
 		my $saveimg = HTTP::Tiny->new( timeout => 10 )->mirror($url, "img/$checksum.png");
 		return ($checksum);
+	} else {
+		print "Cannot Get img ! \n";
+		return;
 	}
 }
 
@@ -31,14 +33,17 @@ sub send_answer {
 	if ($send_answer->{success}) {
 		my $jsontwo = decode_json($send_answer->{content});
 		if ($jsontwo->{'success'} eq '1') {
+			printf("[B:%s] | \e[0;32m[Success]\e[0m | %5s.png | %6s | Wait:%3s | \n",$b,$checksum,$ans,$jsontwo->{'wait'});
 			push @success,'1';
-			printf("[%s] | \e[0;32m[Success]\e[0m | %5s.png | %6s | Wait:%3s | \n",$b,$checksum,$ans,$jsontwo->{'wait'});
 		 } else {
-			push @fail,'1';		 	
-		 	printf("[%s] | \e[0;31m[Fail]\e[0m | %5s.png | %6s | Wait:%3s | \n",$b,$checksum,$ans,$jsontwo->{'wait'});
+		 	printf("[B:%s] | \e[0;31m[Fail]\e[0m | %5s.png | %6s | Wait:%3s | \n",$b,$checksum,$ans,$jsontwo->{'wait'});
+			push @fail,'1';	 	
 		 }
 		my $time = $jsontwo->{'wait'};
 		return $time; 
+	} else {
+		print "Cannot send Answer!\n";
+		return;
 	}
 }
 

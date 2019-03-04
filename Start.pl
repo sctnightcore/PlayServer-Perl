@@ -7,7 +7,7 @@ use Win32::Console;
 use AntiCaptcha;
 use File;
 use PlayServer;
-use Var qw(@success @fail);
+use Var qw(@waitsend @success @fail);
 
 my $cfg = Config::IniFiles->new( -file => "config.ini" );
 my $server = $cfg->val('Setting','URL');
@@ -29,7 +29,7 @@ sub main {
 	while () {
 		my $checksum = PlayServer::getimg_saveimg($server); #get img 
 		my ($ans,$b) = AntiCaptcha::anti_captcha($checksum,$antikey); # get ans
-		File::file_remove($checksum);
+		push @waitsend, "$checksum:$ans";
 		if (time() >= $nextruntime && $countwaitsend >= 0) {
 			my ($img, $answer) = (@waitsend[$countwaitsend] =~ /(\w+):(\w+)/i);
 			my $time = PlayServer::send_answer($answer,$img,$server,$gameid,$serverid,$b);
@@ -37,6 +37,7 @@ sub main {
 			$countwaitsend =+ 1;
 		}
 		$CONSOLE->Title("[Success]: ".scalar(@success)." | [Fail]: ".scalar(@fail)." | BY sctnightcore");
+		File::file_remove($checksum);
 	}
 }
 
