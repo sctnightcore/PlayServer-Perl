@@ -30,14 +30,16 @@ sub main {
 		my $checksum = PlayServer::getimg_saveimg($server); #get img 
 		my ($ans,$b) = AntiCaptcha::anti_captcha($checksum,$antikey); # get ans
 		push @waitsend, "$checksum:$ans";
+		File::file_remove($checksum);
 		if (time() >= $nextruntime && $countwaitsend >= 0) {
 			my ($img, $answer) = (@waitsend[$countwaitsend] =~ /(\w+):(\w+)/i);
-			my $time = PlayServer::send_answer($answer,$img,$server,$gameid,$serverid,$b);
-			$nextruntime = time() + $time + 1;
+			PlayServer::send_answer($answer,$img,$server,$gameid,$serverid,$b);
+			$nextruntime = time() + 62;
 			$countwaitsend =+ 1;
+		} else {
+			return;
 		}
 		$CONSOLE->Title("[Success]: ".scalar(@success)." | [Fail]: ".scalar(@fail)." | BY sctnightcore");
-		File::file_remove($checksum);
 	}
 }
 

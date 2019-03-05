@@ -39,8 +39,6 @@ sub send_answer {
 		 	printf("[B:%s] | \e[0;31m[Fail]\e[0m | %5s.png | %6s | Wait:%3s | \n",$b,$checksum,$ans,$jsontwo->{'wait'});
 			push @fail,'1';	 	
 		 }
-		my $time = $jsontwo->{'wait'};
-		return $time;
 	} else {
 		print "Cannot send Answer!\n";
 		return;
