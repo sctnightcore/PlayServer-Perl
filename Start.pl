@@ -3,6 +3,7 @@ use Config::IniFiles;
 use FindBin qw( $RealBin );
 use lib "$RealBin/Lib";
 use Win32::Console;
+use JSON;
 
 use AntiCaptcha;
 use File;
@@ -53,3 +54,6 @@ sub loadlib {
 	require Win32::Console::ANSI;
 	require Win32::Console;
 }
+
+
+
