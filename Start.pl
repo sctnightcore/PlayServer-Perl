@@ -33,11 +33,9 @@ sub main {
 		File::file_remove($checksum);
 		if (time() >= $nextruntime && $countwaitsend >= 0) {
 			my ($img, $answer) = (@waitsend[$countwaitsend] =~ /(\w+):(\w+)/i);
-			PlayServer::send_answer($answer,$img,$server,$gameid,$serverid,$b);
-			$nextruntime = time() + 62;
+			my $delaytime = PlayServer::send_answer($answer,$img,$server,$gameid,$serverid,$b);
+			$nextruntime = time() + $delaytime + 1;
 			$countwaitsend =+ 1;
-		} else {
-			return;
 		}
 		$CONSOLE->Title("[Success]: ".scalar(@success)." | [Fail]: ".scalar(@fail)." | BY sctnightcore");
 	}
