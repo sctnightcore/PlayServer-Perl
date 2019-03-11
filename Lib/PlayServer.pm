@@ -35,10 +35,12 @@ sub send_answer {
 		if ($jsontwo->{'success'} eq '1') {
 			printf("[B:%s] | \e[0;32m[Success]\e[0m | %5s.png | %6s | Wait:%3s | \n",$b,$checksum,$ans,$jsontwo->{'wait'});
 			push @success,'1';
-		 } else {
+		} else {
 		 	printf("[B:%s] | \e[0;31m[Fail]\e[0m | %5s.png | %6s | Wait:%3s | \n",$b,$checksum,$ans,$jsontwo->{'wait'});
 			push @fail,'1';	 	
-		 }
+		}
+		my $delaytime = $jsontwo->{'wait'};
+		return $delaytime;
 	} else {
 		print "Cannot send Answer!\n";
 		return;
