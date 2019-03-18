@@ -25,7 +25,7 @@ sub main {
 	print "PlayServer-Perl\n";
 	print "By sctnightcore\n";
 	print "================================\n";
-	$CONSOLE->Title("[Success]: ".scalar(@success)." | [Fail]: ".scalar(@fail)." | BY sctnightcore") if (system eq $^O);
+	$CONSOLE->Title("[Success]: ".scalar(@success)." | [Fail]: ".scalar(@fail)." | BY sctnightcore") if (system $^O eq 'MSWin32');
 	while () {
 		my $b = AntiCaptcha::checkmoney($antikey);
 		if ($b == '0') {
@@ -39,8 +39,8 @@ sub main {
 		my $delaytime = PlayServer::send_answer($ans,$checksum,$server,$gameid,$serverid,$b);
 		print("Sleep $delaytime sec\n");
 		sleep($delaytime + 1);
-		print("[Success]: ".scalar(@success)." | [Fail]: ".scalar(@fail)." | BY sctnightcore"\n) if (!system eq $^0);
-		$CONSOLE->Title("[Success]: ".scalar(@success)." | [Fail]: ".scalar(@fail)." | BY sctnightcore") if (system eq $^O);
+		print("[Success]: ".scalar(@success)." | [Fail]: ".scalar(@fail)." | BY sctnightcore"\n) if (!system $^O eq 'MSWin32');
+		$CONSOLE->Title("[Success]: ".scalar(@success)." | [Fail]: ".scalar(@fail)." | BY sctnightcore") if (system $^O eq 'MSWin32');
 	}
 }
 
