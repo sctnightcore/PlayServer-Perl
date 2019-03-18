@@ -53,9 +53,7 @@ sub loadlib {
 	require PlayServer;
 	require Var;
 	require WebService::Antigate::V2;
-	if (system eq $^O) {
-		require Win32::Console;
-	}
+	require Win32::Console if (system $^O eq 'MSWin32');
 	require Term::ANSIColor;
 }
 
