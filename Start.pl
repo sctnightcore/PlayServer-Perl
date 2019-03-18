@@ -25,7 +25,7 @@ sub main {
 	print "PlayServer-Perl\n";
 	print "By sctnightcore\n";
 	print "================================\n";
-	$CONSOLE->Title("[Success]: ".scalar(@success)." | [Fail]: ".scalar(@fail)." | BY sctnightcore");
+	$CONSOLE->Title("[Success]: ".scalar(@success)." | [Fail]: ".scalar(@fail)." | BY sctnightcore") if (system eq $^O);
 	while () {
 		my $b = AntiCaptcha::checkmoney($antikey);
 		if ($b == '0') {
@@ -39,7 +39,7 @@ sub main {
 		my $delaytime = PlayServer::send_answer($ans,$checksum,$server,$gameid,$serverid,$b);
 		sleep($delaytime + 1);
 		print("Sleep $delaytime sec\n");
-		$CONSOLE->Title("[Success]: ".scalar(@success)." | [Fail]: ".scalar(@fail)." | BY sctnightcore");
+		$CONSOLE->Title("[Success]: ".scalar(@success)." | [Fail]: ".scalar(@fail)." | BY sctnightcore") if (system eq $^O);
 	}
 }
 
@@ -52,8 +52,10 @@ sub loadlib {
 	require PlayServer;
 	require Var;
 	require WebService::Antigate::V2;
-	require Win32::Console::ANSI;
-	require Win32::Console;
+	if (system eq $^O) {
+		require Win32::Console;
+	}
+	require Term::ANSIColor;
 }
 
 

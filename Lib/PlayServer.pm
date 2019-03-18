@@ -2,7 +2,7 @@ package PlayServer;
 use strict;
 use JSON;
 use HTTP::Tiny;
-use Win32::Console::ANSI;
+use Term::ANSIColor qw(:constants);
 use Var qw(@success @fail);
 
 sub getimg_saveimg {
@@ -15,7 +15,7 @@ sub getimg_saveimg {
 		my $saveimg = HTTP::Tiny->new( timeout => 10 )->mirror($url, "img/$checksum.png");
 		return ($checksum);
 	} else {
-		print "Cannot Get img ! \n";
+		print RED("Cannot Get img ! \n"),RESET;
 		return;
 	}
 }
@@ -33,16 +33,16 @@ sub send_answer {
 	if ($send_answer->{success}) {
 		my $jsontwo = decode_json($send_answer->{content});
 		if ($jsontwo->{'success'} eq '1') {
-			printf("[B:%s] | \e[0;32m[Success]\e[0m | %5s.png | %6s | Wait:%3s | \n",$b,$checksum,$ans,$jsontwo->{'wait'});
+			printf GREEN("[B:%s] | [Success] | %5s.png | %6s | Wait:%3s | \n",$b,$checksum,$ans,$jsontwo->{'wait'}),RESET;
 			push @success,'1';
 		} else {
-		 	printf("[B:%s] | \e[0;31m[Fail]\e[0m | %5s.png | %6s | Wait:%3s | \n",$b,$checksum,$ans,$jsontwo->{'wait'});
+		 	printf RED("[B:%s] | [Fail] | %5s.png | %6s | Wait:%3s | \n",$b,$checksum,$ans,$jsontwo->{'wait'}),RESET;
 			push @fail,'1';	 	
 		}
 		my $delaytime = $jsontwo->{'wait'};
 		return $delaytime;
 	} else {
-		print "Cannot send Answer!\n";
+		print RED("Cannot send Answer!\n"),RESET;
 		return;
 	}
 }
