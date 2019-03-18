@@ -8,7 +8,7 @@ use JSON;
 use AntiCaptcha;
 use File;
 use PlayServer;
-use Var qw(@waitsend @success @fail);
+use Var qw(@success @fail);
 
 my $cfg = Config::IniFiles->new( -file => "config.ini" );
 my $server = $cfg->val('Setting','URL');
@@ -25,8 +25,6 @@ sub main {
 	print "PlayServer-Perl\n";
 	print "By sctnightcore\n";
 	print "================================\n";
-	my $nextruntime = 0;
-	my $countwaitsend = 0;
 	$CONSOLE->Title("[Success]: ".scalar(@success)." | [Fail]: ".scalar(@fail)." | BY sctnightcore");
 	while () {
 		my $b = AntiCaptcha::checkmoney($antikey);
