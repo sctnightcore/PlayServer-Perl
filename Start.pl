@@ -32,6 +32,7 @@ sub main {
 		my $b = AntiCaptcha::checkmoney($antikey);
 		if ($b == '0') {
 			print "You balance in Anti-Captcha.com is 0 !\n";
+			sleep 10;
 			exit;
 		}
 		my $checksum = PlayServer::getimg_saveimg($server); #get img 
