@@ -40,6 +40,7 @@ sub main {
 		File::file_remove($checksum);
 		my $delaytime = PlayServer::send_answer($ans,$checksum,$server,$gameid,$serverid,$b);
 		sleep($delaytime);
+		print("Sleep $delaytime sec\n");
 		$CONSOLE->Title("[Success]: ".scalar(@success)." | [Fail]: ".scalar(@fail)." | BY sctnightcore");
 	}
 }
