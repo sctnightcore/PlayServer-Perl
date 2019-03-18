@@ -39,7 +39,7 @@ sub main {
 		my $ans = AntiCaptcha::anti_captcha($checksum,$antikey); # get ans
 		File::file_remove($checksum);
 		my $delaytime = PlayServer::send_answer($ans,$checksum,$server,$gameid,$serverid,$b);
-		sleep($delaytime->{'wait'});
+		sleep($delaytime);
 		$CONSOLE->Title("[Success]: ".scalar(@success)." | [Fail]: ".scalar(@fail)." | BY sctnightcore");
 	}
 }
