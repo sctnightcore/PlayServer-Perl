@@ -37,14 +37,9 @@ sub main {
 		}
 		my $checksum = PlayServer::getimg_saveimg($server); #get img 
 		my $ans = AntiCaptcha::anti_captcha($checksum,$antikey); # get ans
-		push @waitsend, "$checksum:$ans";
 		File::file_remove($checksum);
-		if (time() >= $nextruntime && $countwaitsend >= 0) {
-			my ($img, $answer) = (@waitsend[$countwaitsend] =~ /(\w+):(\w+)/i);
-			my $delaytime = PlayServer::send_answer($answer,$img,$server,$gameid,$serverid,$b);
-			$nextruntime = time() + $delaytime + 1;
-			$countwaitsend =+ 1;
-		}
+		my $delaytime = PlayServer::send_answer($ans,$checksum,$server,$gameid,$serverid,$b);
+		sleep($delaytime->{'wait'});
 		$CONSOLE->Title("[Success]: ".scalar(@success)." | [Fail]: ".scalar(@fail)." | BY sctnightcore");
 	}
 }
