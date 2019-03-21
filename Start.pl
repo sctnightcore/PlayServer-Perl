@@ -19,7 +19,6 @@ my $CONSOLE = new Win32::Console();
 main();
 sub main {
 	loadlib();
-	hehe($antikey,$gameid,$serverid);
 	system $^O eq 'MSWin32' ? 'cls' : 'clear';
 	print "================================\n";
 	print "PlayServer-Perl\n";
