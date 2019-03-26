@@ -2,6 +2,7 @@ package PlayServer;
 use strict;
 use JSON;
 use HTTP::Tiny;
+use Win32::Console::ANSI;
 use Term::ANSIColor qw(:constants);
 use Var qw(@success @fail);
 
@@ -33,10 +34,10 @@ sub send_answer {
 	if ($send_answer->{success}) {
 		my $jsontwo = decode_json($send_answer->{content});
 		if ($jsontwo->{'success'} eq '1') {
-			printf GREEN("[B:%s] | [Success] | %5s.png | %6s | Wait:%3s | \n",$b,$checksum,$ans,$jsontwo->{'wait'}),RESET;
+			print GREEN("[B:$b] | [Success] | $checksum.png | $ans | Wait:$jsontwo->{'wait'} | \n"),RESET;
 			push @success,'1';
 		} else {
-		 	printf RED("[B:%s] | [Fail] | %5s.png | %6s | Wait:%3s | \n",$b,$checksum,$ans,$jsontwo->{'wait'}),RESET;
+		 	print RED("[B:$b] | [Fail] | $checksum.png | $ans | Wait:$jsontwo->{'wait'} | \n"),RESET;
 			push @fail,'1';	 	
 		}
 		my $delaytime = $jsontwo->{'wait'};
