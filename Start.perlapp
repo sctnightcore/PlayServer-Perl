@@ -4,7 +4,7 @@ Packer: C:\Program Files (x86)\ActiveState Perl Dev Kit 9.2\bin\perlapp.exe
 Script: Start.pl
 Cwd: C:\Users\admin\Desktop\perl\NewPlayServer-Client\PlayServer-Perl
 Clean: 0
-Date: 2019-03-26 08:02:20
+Date: 2019-03-26 08:06:10
 Debug: 
 Dependent: 0
 Dyndll: 0
@@ -18,7 +18,7 @@ Manifest:
 No-Compress: 0
 No-Logo: 0
 Runlib: 
-Shared: none
+Shared: public
 Tmpdir: 
 Verbose: 0
 Version-Comments: 
