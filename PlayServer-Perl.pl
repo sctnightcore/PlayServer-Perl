@@ -20,16 +20,29 @@ sub main {
 	print "PlayServer-Perl\n";
 	print "By sctnightcore\n";
 	print "================================\n";
-	set_titlebar("[Success]: ".scalar(@success)." | [Fail]: ".scalar(@fail)." | BY sctnightcore");
+	my $startsendagain = 0;
+	my %checksumhash;
+	my %answerhash;
+	my $contchecksum_answer = 0;
+	my (@checksum_keys, @answer_keys);
+	set_titlebar("[Success]: ".scalar(@success)." | [Fail]: ".scalar(@fail)." | [WaitSend]: ".scalar(@checksum_keys)." | BY sctnightcore");
 	while () {
 		my $b = AntiCaptcha::checkmoney($antikey);
 		my $checksum = PlayServer::getimg_saveimg($server); #get img 
-		my $ans = AntiCaptcha::anti_captcha($checksum,$antikey); # get ans
+		my $answer = AntiCaptcha::anti_captcha($checksum,$antikey); # get ans
 		File::file_remove($checksum);
-		my $delaytime = PlayServer::send_answer($ans,$checksum,$server,$gameid,$serverid,$b);
-		print("Sleep $delaytime sec\n");
-		sleep($delaytime + 1);
-		set_titlebar("[Success]: ".scalar(@success)." | [Fail]: ".scalar(@fail)." | BY sctnightcore");
+		$checksumhash{'checksum'} = $checksum;
+		$answerhash{'answer'} = $answer;
+		@checksum_keys = sort keys %checksumhash;
+		@answer_keys = sort keys %answerhash;
+		if ( time >= $startsendagain ) {
+			$contchecksum_answer++;
+			my $delaytime = PlayServer::send_answer($answerhash{'answer'}[$contchecksum_answer],$checksumhash{'checksum'}[$contchecksum_answer],$server,$gameid,$serverid,$b);
+			$startsendagain = $delaytime + 1;
+			delete $checksumhash{shift @checksum_keys};
+			delete $answerhash{shift @answer_keys};
+			set_titlebar("[Success]: ".scalar(@success)." | [Fail]: ".scalar(@fail)." | [WaitSend]: ".scalar(@checksum_keys)." | BY sctnightcore");
+		}	
 	}
 }
 
