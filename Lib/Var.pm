@@ -5,7 +5,9 @@ use warnings;
 
 use Exporter;
 our @ISA    = qw/ Exporter /;
-our @EXPORT = qw/@success @fail/;
+our @EXPORT = qw/$success $fail $waitsend/;
 
-our (@success,@fail);
+our $success = 0;
+our $fail = 0;
+our $waitsend = 0;
 1;
