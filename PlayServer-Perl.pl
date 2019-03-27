@@ -28,12 +28,12 @@ sub main {
 		my $checksum = PlayServer::getimg_saveimg($server); #get img 
 		my $answer = AntiCaptcha::anti_captcha($checksum,$antikey); # get ans
 		$waitsend += 1;
+		set_titlebar("[Success]: ".$success." | [Fail]: ".$fail." | [WaitSend]: ".$waitsend." | BY sctnightcore");
 		File::file_remove($checksum);
 		if( time() >= $startsendagain) {
 			my $delaytime = PlayServer::send_answer($answer,$checksum,$server,$gameid,$serverid,$b);
 			$waitsend -= 1;
 			$startsendagain = time() + $delaytime + 1;
-			set_titlebar("[Success]: ".$success." | [Fail]: ".$fail." | [WaitSend]: ".$waitsend." | BY sctnightcore");
 		}
 		set_titlebar("[Success]: ".$success." | [Fail]: ".$fail." | [WaitSend]: ".$waitsend." | BY sctnightcore");
 		sleep 10;
