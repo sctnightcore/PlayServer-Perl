@@ -32,8 +32,7 @@ sub main {
 		if( time() >= $startsendagain) {
 			my $delaytime = PlayServer::send_answer($answer,$checksum,$server,$gameid,$serverid,$b);
 			$waitsend -= 1;
-			#$startsendagain = $delaytime + 1;
-			$startsendagain = time()+61;
+			$startsendagain = time() + $delaytime + 1;
 			set_titlebar("[Success]: ".$success." | [Fail]: ".$fail." | [WaitSend]: ".$waitsend." | BY sctnightcore");
 		}
 		set_titlebar("[Success]: ".$success." | [Fail]: ".$fail." | [WaitSend]: ".$waitsend." | BY sctnightcore");

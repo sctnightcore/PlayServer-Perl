@@ -1,0 +1,1 @@
+perlapp --icon icon.ico --lib Lib --shared public --norunlib --exe PlayServer-Perl.exe PlayServer-Perl.pl

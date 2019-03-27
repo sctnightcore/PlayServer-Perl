@@ -19,7 +19,7 @@ nytprof.out
 # Module::Build
 _build/
 Build
-Build.bat
+
 
 # Module::Install
 inc/
