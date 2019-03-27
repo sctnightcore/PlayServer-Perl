@@ -47,7 +47,7 @@ sub Start {
 				print("[-] | \e[0;31m[Fail]\e[0m | $checksum.png | $answer\n");
 				$fail += 1;
 			}
-			shift @{$hash->{all_data}};
+			shift @{$hash_data->{all_data}};
 			$startsendagain = time() + $send_answer->{'wait'} + 1;
 			$c->Title('[PlayServer-Perl] => [Success:'.$success.'|Fail: '.$fail.'|WaitSend:'.$waitsend.']');
 		}
