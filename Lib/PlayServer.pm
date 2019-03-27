@@ -2,9 +2,7 @@ package PlayServer;
 use strict;
 use JSON;
 use HTTP::Tiny;
-use Win32::Console::ANSI;
-use Term::ANSIColor qw(:constants);
-use Var qw($success $fail);
+
 
 sub getimg_saveimg {
 	my ($server) = @_;
@@ -16,7 +14,7 @@ sub getimg_saveimg {
 		my $saveimg = HTTP::Tiny->new( timeout => 10 )->mirror($url, "img/$checksum.png");
 		return ($checksum);
 	} else {
-		print RED("Cannot Get img ! \n"),RESET;
+		die "cannot get img from playserver\n";
 		return;
 	}
 }
@@ -33,17 +31,9 @@ sub send_answer {
 	});
 	if ($send_answer->{success}) {
 		my $jsontwo = decode_json($send_answer->{content});
-		if ($jsontwo->{'success'} eq '1') {
-			print GREEN("[B:$b] | [Success] | $checksum.png | $ans | Wait:$jsontwo->{'wait'} | \n"),RESET;
-			$success += 1;
-		} else {
-		 	print RED("[B:$b] | [Fail] | $checksum.png | $ans | Wait:$jsontwo->{'wait'} | \n"),RESET;
-			$fail += 1; 	
-		}
-		my $delaytime = $jsontwo->{'wait'};
-		return $delaytime;
+		return $jsontwo;
 	} else {
-		print RED("Cannot send Answer!\n"),RESET;
+		die "Cannot send answer to playserver\n";
 		return;
 	}
 }
