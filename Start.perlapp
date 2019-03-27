@@ -1,14 +1,14 @@
 #!C:\Program Files (x86)\ActiveState Perl Dev Kit 9.2\bin\perlapp-gui.exe
 PAP-Version: 1.0
 Packer: C:\Program Files (x86)\ActiveState Perl Dev Kit 9.2\bin\perlapp.exe
-Script: Start.pl
+Script: PlayServer-Perl.pl
 Cwd: C:\Users\admin\Desktop\perl\NewPlayServer-Client\PlayServer-Perl
 Clean: 0
-Date: 2019-03-26 08:06:10
+Date: 2019-03-27 16:43:26
 Debug: 
 Dependent: 0
 Dyndll: 0
-Exe: Start.exe
+Exe: PlayServer-Perl.exe
 Force: 0
 Gui: 0
 Hostname: admin-PC
@@ -18,7 +18,7 @@ Manifest:
 No-Compress: 0
 No-Logo: 0
 Runlib: 
-Shared: public
+Shared: none
 Tmpdir: 
 Verbose: 0
 Version-Comments: 
