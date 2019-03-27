@@ -58,7 +58,6 @@ sub Loadlib {
 	require PlayServer;
 	require Main;
 	require WebService::Antigate;
-	require Term::Title;
 	require Term::ANSIColor;
 	require Win32::Console::ANSI;
 	require Win32::Console;
