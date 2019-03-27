@@ -4,7 +4,7 @@ use JSON;
 use HTTP::Tiny;
 use Win32::Console::ANSI;
 use Term::ANSIColor qw(:constants);
-use Var qw(@success @fail);
+use Var qw($success $fail);
 
 sub getimg_saveimg {
 	my ($server) = @_;
@@ -35,10 +35,10 @@ sub send_answer {
 		my $jsontwo = decode_json($send_answer->{content});
 		if ($jsontwo->{'success'} eq '1') {
 			print GREEN("[B:$b] | [Success] | $checksum.png | $ans | Wait:$jsontwo->{'wait'} | \n"),RESET;
-			push @success,'1';
+			$success += 1;
 		} else {
 		 	print RED("[B:$b] | [Fail] | $checksum.png | $ans | Wait:$jsontwo->{'wait'} | \n"),RESET;
-			push @fail,'1';	 	
+			$fail += 1; 	
 		}
 		my $delaytime = $jsontwo->{'wait'};
 		return $delaytime;
