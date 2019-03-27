@@ -5,19 +5,19 @@ use JSON;
 use AntiCaptcha;
 use File;
 use PlayServer;
-use Term::Title 'set_titlebar', 'set_tab_title';
-
+use Win32::Console;
 sub Start {
 	my $startsendagain = 0;
 	my $success = 0;
 	my $fail = 0;
 	my $waitsend = 0;
+	my $c = Win32::Console->new();
 	print "================================\n";
 	print "PlayServer-Perl\n";
 	print "by sctnightcore\n";
 	print "github.com/sctnightcore\n";
 	print "================================\n";
-	set_titlebar("[Success]: 0 | [Fail]: 0 | [WaitSend]: 0 | BY sctnightcore");
+	$c->Title('[PlayServer-Perl] => [Success:'.$success.'|Fail: '.$fail.'|WaitSend:'.$waitsend.']');
 	my $cfg = Config::IniFiles->new( -file => "config.ini" );
 	my $server = $cfg->val('Setting','URL');
 	my $serverid = $cfg->val('Setting','SERVERID');
@@ -28,8 +28,8 @@ sub Start {
 		my $checksum = PlayServer::getimg_saveimg($server); #get img
 		my $answer = AntiCaptcha::anti_captcha($checksum,$antikey); # get ans
 		File::file_remove($checksum);
+		chomp($b,$checksum,$answer);
 		$waitsend += 1;
-		set_titlebar("[Success]: ".$success." | [Fail]: ".$fail." | [WaitSend]: ".$waitsend." | BY sctnightcore");
 		if (time() >= $startsendagain) {
 			my $send_answer = PlayServer::send_answer($answer,$checksum,$server,$gameid,$serverid,$b);
 			$waitsend -= 1;
@@ -40,10 +40,12 @@ sub Start {
 				print("[B:$b] | \e[0;31m[Fail]\e[0m | $checksum.png | $answer\n");
 				$fail += 1;
 			}
-			$startsendagain = time() + $send_answer->{'wait'} + 1;
+			#$startsendagain = time() + $send_answer->{'wait'} + 1;
+			$startsendagain = time() + 1;
+			$c->Title('[PlayServer-Perl] => [Success:'.$success.'|Fail: '.$fail.'|WaitSend:'.$waitsend.']');
 		}
-		set_titlebar("[Success]: ".$success." | [Fail]: ".$fail." | [WaitSend]: ".$waitsend." | BY sctnightcore");
 		sleep 10;
+		$c->Title('[PlayServer-Perl] => [Success:'.$success.'|Fail: '.$fail.'|WaitSend:'.$waitsend.']');
 	}
 }
 
@@ -59,6 +61,7 @@ sub Loadlib {
 	require Term::Title;
 	require Term::ANSIColor;
 	require Win32::Console::ANSI;
+	require Win32::Console;
 }
 
 1;

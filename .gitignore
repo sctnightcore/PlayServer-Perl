@@ -33,3 +33,7 @@ inc/
 /MANIFEST.bak
 /pm_to_blib
 /*.zip
+*.png
+Start.perlapp
+config.ini
+config.ini
