@@ -32,10 +32,10 @@ sub Start {
 		my $checksum = PlayServer::getimg_saveimg($server); #get img
 		my $answer = AntiCaptcha::anti_captcha($checksum,$antikey); # get ans
 		File::file_remove($checksum);
-		chomp($b,$checksum,$answer);
 		$hash_data->{all_data}->[$count_savedata]->{checksum} = $checksum;
 		$hash_data->{all_data}->[$count_savedata]->{answer} = $answer;
 		$waitsend += 1;
+		$c->Title('[PlayServer-Perl] => [Success:'.$success.'|Fail: '.$fail.'|WaitSend:'.$waitsend.']');
 		if (time() >= $startsendagain) {
 			$count_senddata++;
 			my $send_answer = PlayServer::send_answer($hash_data->{all_data}->[$count_senddata]->{answer},$hash_data->{all_data}->[$count_senddata]->{checksum},$server,$gameid,$serverid,$b);
