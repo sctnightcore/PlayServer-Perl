@@ -41,7 +41,7 @@ sub Start {
 			my $send_answer = PlayServer::send_answer($hash_data->{all_data}->[$count_senddata]->{answer},$hash_data->{all_data}->[$count_senddata]->{checksum},$server,$gameid,$serverid,$b);
 			$waitsend -= 1;
 			if ($send_answer->{'success'} eq '1') {
-				print("[+] |\e[0;32m[Success]\e[0m | $checksum.png | $answer\n");
+				print("[+] | \e[0;32m[Success]\e[0m | $checksum.png | $answer\n");
 				$success += 1;
 			} else {
 				print("[-] | \e[0;31m[Fail]\e[0m | $checksum.png | $answer\n");
