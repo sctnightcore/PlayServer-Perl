@@ -1,5 +1,6 @@
 package Main;
 use strict;
+use warnings;
 use Config::IniFiles;
 use JSON;
 use AntiCaptcha;
@@ -38,7 +39,7 @@ sub Start {
 		$c->Title('[PlayServer-Perl] => [Success:'.$success.'|Fail: '.$fail.'|WaitSend:'.$waitsend.']');
 		if (time() >= $startsendagain) {
 			$count_senddata++;
-			my $send_answer = PlayServer::send_answer($hash_data->{all_data}->[$count_senddata]->{answer},$hash_data->{all_data}->[$count_senddata]->{checksum},$server,$gameid,$serverid,$b);
+			my $send_answer = PlayServer::send_answer($hash_data->{all_data}->[0]->{answer},$hash_data->{all_data}->[0]->{checksum},$server,$gameid,$serverid,$b);
 			$waitsend -= 1;
 			if ($send_answer->{'success'} eq '1') {
 				print("[+] | \e[0;32m[Success]\e[0m | $checksum.png | $answer\n");
@@ -47,7 +48,7 @@ sub Start {
 				print("[-] | \e[0;31m[Fail]\e[0m | $checksum.png | $answer\n");
 				$fail += 1;
 			}
-			shift @{$hash_data->{all_data}};
+			shift @{$hash_data->{all_data}}; #next checksum / answer
 			$startsendagain = time() + $send_answer->{'wait'} + 1;
 			$c->Title('[PlayServer-Perl] => [Success:'.$success.'|Fail: '.$fail.'|WaitSend:'.$waitsend.']');
 		}
