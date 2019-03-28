@@ -39,6 +39,7 @@ sub Start {
 		File::file_remove($checksum);
 		$hash_data->{all_data}->[$count_savedata]->{checksum} = $checksum;
 		$hash_data->{all_data}->[$count_savedata]->{answer} = $answer;
+		print "\e[0;36madd Checksum / answer to hash data\e[0m\n" if ($debug == 1);
 		$waitsend += 1;
 		$c->Title('[PlayServer-Perl] => [Success:'.$success.'|Fail: '.$fail.'|WaitSend:'.$waitsend.']');
 		if (time() >= $startsendagain) {
