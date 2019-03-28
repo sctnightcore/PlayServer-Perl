@@ -7,6 +7,7 @@ use AntiCaptcha;
 use File;
 use PlayServer;
 use Win32::Console;
+
 sub Start {
 	my $startsendagain = 0;
 	my $success = 0;
@@ -20,7 +21,7 @@ sub Start {
 	print "by sctnightcore\n";
 	print "github.com/sctnightcore\n";
 	print "================================\n";
-	$c->Title('[PlayServer-Perl] => [Success:'.$success.'|Fail: '.$fail.'|WaitSend:'.$waitsend.']');
+	$c->Title('[ Success:'.$success.' | Fail: '.$fail.' | WaitSend:'.$waitsend.'] BY SCTNIGHTCORE');
 	my $cfg = Config::IniFiles->new( -file => "config.ini" );
 	my $server = $cfg->val('Setting','URL');
 	my $serverid = $cfg->val('Setting','SERVERID');
@@ -31,19 +32,14 @@ sub Start {
 	while () {
 		$count_savedata++;
 		my $b = AntiCaptcha::checkmoney($antikey);
-		print "\e[0;36mAntiCaptcha Money : $b\e[0m\n" if ($debug == 1);
 		my $checksum = PlayServer::getimg_saveimg($server); #get img
-		print "\e[0;36mGet Checksum : $checksum\e[0m\n" if ($debug == 1);
 		my $answer = AntiCaptcha::anti_captcha($checksum,$antikey); # get ans
-		print "\e[0;36mGet Answer : $checksum is $answer\e[0m\n" if ($debug == 1);
 		File::file_remove($checksum);
 		$hash_data->{all_data}->[$count_savedata]->{checksum} = $checksum;
 		$hash_data->{all_data}->[$count_savedata]->{answer} = $answer;
-		print "\e[0;36madd Checksum / answer to hash data\e[0m\n" if ($debug == 1);
 		$waitsend += 1;
-		$c->Title('[PlayServer-Perl] => [Success:'.$success.'|Fail: '.$fail.'|WaitSend:'.$waitsend.']');
+		$c->Title('[ Success:'.$success.' | Fail: '.$fail.' | WaitSend:'.$waitsend.'] BY SCTNIGHTCORE');
 		if (time() >= $startsendagain) {
-			print "\e[0;36mSend Answer : $checksum is $answer\e[0m\n" if ($debug == 1);
 			my $send_answer = PlayServer::send_answer($hash_data->{all_data}->[0]->{answer},$hash_data->{all_data}->[0]->{checksum},$server,$gameid,$serverid,$b);
 			$waitsend -= 1;
 			if ($send_answer->{'success'} eq '1') {
@@ -54,12 +50,10 @@ sub Start {
 				$fail += 1;
 			}
 			shift @{$hash_data->{all_data}}; #next checksum / answer
-			print "\e[0;36muse next $hash_data->{all_data}->[0]->{checksum} / $hash_data->{all_data}->[0]->{answer}.\e[0m\n" if ($debug == 1);
-			print "\e[0;36mSleep $send_answer->{'wait'} sec to send again.\e[0m\n" if ($debug == 1);
 			$startsendagain = time() + $send_answer->{'wait'} + 1;
-			$c->Title('[PlayServer-Perl] => [Success:'.$success.'|Fail: '.$fail.'|WaitSend:'.$waitsend.']');
+			$c->Title('[ Success:'.$success.' | Fail: '.$fail.' | WaitSend:'.$waitsend.'] BY SCTNIGHTCORE');
 		}
-		$c->Title('[PlayServer-Perl] => [Success:'.$success.'|Fail: '.$fail.'|WaitSend:'.$waitsend.']');
+		$c->Title('[ Success:'.$success.' | Fail: '.$fail.' | WaitSend:'.$waitsend.'] BY SCTNIGHTCORE');
 		sleep 10;
 	}
 }
