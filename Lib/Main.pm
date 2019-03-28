@@ -26,19 +26,23 @@ sub Start {
 	my $serverid = $cfg->val('Setting','SERVERID');
 	my $gameid = $cfg->val( 'Setting', 'GAMEID' );
 	my $antikey = $cfg->val('Setting','AntiCaptchakey');
+	my $debug = $cfg->val('Setting','DEBUG');
 	my $hash_data;
 	while () {
 		$count_savedata++;
 		my $b = AntiCaptcha::checkmoney($antikey);
+		print "AntiCaptcha Money : $b\n" if ($debug == 1);
 		my $checksum = PlayServer::getimg_saveimg($server); #get img
+		print "Get Checksum : $checksum\n" if ($debug == 1);
 		my $answer = AntiCaptcha::anti_captcha($checksum,$antikey); # get ans
+		print "Get Answer : $checksum is $answer\n" if ($debug == 1);
 		File::file_remove($checksum);
 		$hash_data->{all_data}->[$count_savedata]->{checksum} = $checksum;
 		$hash_data->{all_data}->[$count_savedata]->{answer} = $answer;
 		$waitsend += 1;
 		$c->Title('[PlayServer-Perl] => [Success:'.$success.'|Fail: '.$fail.'|WaitSend:'.$waitsend.']');
 		if (time() >= $startsendagain) {
-			$count_senddata++;
+			print "Send Answer : $checksum is $answer\n" if ($debug == 1);
 			my $send_answer = PlayServer::send_answer($hash_data->{all_data}->[0]->{answer},$hash_data->{all_data}->[0]->{checksum},$server,$gameid,$serverid,$b);
 			$waitsend -= 1;
 			if ($send_answer->{'success'} eq '1') {
@@ -49,11 +53,13 @@ sub Start {
 				$fail += 1;
 			}
 			shift @{$hash_data->{all_data}}; #next checksum / answer
+			print "use next $hash_data->{all_data}->[0]->{checksum} / $hash_data->{all_data}->[0]->{answer}.\n" if ($debug == 1);
+			print "Sleep $send_answer->{'wait'} sec to send again.\n" if ($debug == 1);
 			$startsendagain = time() + $send_answer->{'wait'} + 1;
 			$c->Title('[PlayServer-Perl] => [Success:'.$success.'|Fail: '.$fail.'|WaitSend:'.$waitsend.']');
 		}
-		sleep 10;
 		$c->Title('[PlayServer-Perl] => [Success:'.$success.'|Fail: '.$fail.'|WaitSend:'.$waitsend.']');
+		sleep 10;
 	}
 }
 
