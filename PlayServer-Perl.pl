@@ -43,7 +43,7 @@ sub Start {
 			my $sendchecksum = $hash_data->{all_data}->[0]->{checksum};
 			my $sendanswer = $hash_data->{all_data}->[0]->{answer};
 			my $sleeptime = $playserver->send_answer($sendanswer, $sendchecksum);
-			if ($send_answer->{'success'} eq '1') {
+			if ($sleeptime->{'success'} eq '1') {
 				printf("[+][%02d:%02d:%02d] | \e[0;32m%5s\e[0m | %5s | %5s ", $hour, $min, $sec,'SUCCESS',"$sendchecksum.png","$sendanswer");
 				$success += 1;
 			} else {
