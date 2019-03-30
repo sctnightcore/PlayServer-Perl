@@ -20,31 +20,28 @@ sub getimg_saveimg {
 	my $res_getimg_saveimg = $self->{ua}->request('POST', 'http://playserver.co/index.php/Vote/ajax_getpic/'.$self->{server_Url});
 	if ($res_getimg_saveimg->{success}) {
 		my $getimg_saveimg_json = decode_json($res_getimg_saveimg->{content});
-		$self->{checksum} = $getimg_saveimg_json->{'checksum'};
-		print "[GetChecksum]: $self->{checksum}\n";
-		$self->{ua}->mirror('http://playserver.co/index.php/VoteGetImage/'.$self->{checksum}, 'img/'.$self->{checksum}.'.png' );
-		print "[DownloadCheckSum]: $self->{checksum}\n";
-		return ($self->{checksum},$getimg_saveimg_json->{'checksum'});
+		my $checksum = $getimg_saveimg_json->{'checksum'};
+		$self->{ua}->mirror('http://playserver.co/index.php/VoteGetImage/'.$checksum, 'img/'.$checksum.'.png' );
+		return ($checksum);
 	} else {
 		return 1;
 	}
 }
 
 sub send_answer {
-	my ($self, $answer) = @_;
+	my ($self, $answer, $checksum) = @_;
 	my $www_sendanswer = "http://playserver.co/index.php/Vote/ajax_submitpic/$self->{server_Url}";
 	my $res_send_answer = $self->{ua}->request('POST', $www_sendanswer, {
-		content => "server_id=$self->{server_ID}&captcha=$answer&gameid=$self->{game_ID}&checksum=$self->{checksum}",,
+		content => "server_id=$self->{server_ID}&captcha=$answer&gameid=$self->{game_ID}&checksum=$checksum",,
 		headers => { 
 	  		'content-type' => 'application/x-www-form-urlencoded',
 	  		'referer' => "http://playserver.in.th/index.php/Vote/prokud/$self->{server_Url}"}
 	});
 	if ($res_send_answer->{success}) {
 		my $send_answer_json = decode_json($res_send_answer->{content});
-		if ($send_answer_json->{'success'} eq '1') {
-			print("[+] | \e[0;32m[Success]\e[0m | $self->{checksum}.png | $answer\n");
+			return $send_answer_json;
 		} else {
-			print("[-] | \e[0;31m[Fail]\e[0m | $self->{checksum}.png | $answer\n");
+			return 1;
 		}
 	}
 }
