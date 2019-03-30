@@ -39,10 +39,9 @@ sub send_answer {
 	});
 	if ($res_send_answer->{success}) {
 		my $send_answer_json = decode_json($res_send_answer->{content});
-			return $send_answer_json;
-		} else {
-			return 1;
-		}
+		return $send_answer_json;
+	} else {
+		return 1;
 	}
 }
 1;
