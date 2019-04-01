@@ -64,7 +64,6 @@ sub Start {
 					$fail += 1;
 				}
 				case 1 { 
-
 					printf("[+][%02d:%02d:%02d] | \e[0;32m%5s\e[0m | %5s | %5s ", $hour, $min, $sec, 'SUCCESS', $hash_data->{all_data}->[0]->{'checksum'}.'.png', $hash_data->{all_data}->[0]->{'answer'}); 
 					$success += 1;					
 				}
