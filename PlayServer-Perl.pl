@@ -60,12 +60,13 @@ sub Start {
 			#check res playserver
 			switch ($res_playserver->{'success'}) {
 				case 0 { 
-					printf("[+][%02d:%02d:%02d] | \e[0;32m%5s\e[0m | %5s | %5s ", $hour, $min, $sec, 'SUCCESS', $hash_data->{all_data}->[0]->{'checksum'}.'.png', $hash_data->{all_data}->[0]->{'answer'}); 
-					$success += 1;
-				}
-				case 1 { 
 					printf("[-][%02d:%02d:%02d] | \e[0;32m%5s\e[0m | %5s | %5s ", $hour, $min, $sec, 'FAIL', $hash_data->{all_data}->[0]->{'checksum'}.'.png', $hash_data->{all_data}->[0]->{'answer'});
 					$fail += 1;
+				}
+				case 1 { 
+
+					printf("[+][%02d:%02d:%02d] | \e[0;32m%5s\e[0m | %5s | %5s ", $hour, $min, $sec, 'SUCCESS', $hash_data->{all_data}->[0]->{'checksum'}.'.png', $hash_data->{all_data}->[0]->{'answer'}); 
+					$success += 1;					
 				}
 			}
 			#next checksum / answer for send next time
