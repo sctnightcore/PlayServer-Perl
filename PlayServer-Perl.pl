@@ -53,10 +53,10 @@ sub Start {
 			#check res playserver
 			#0 = Fail / 1 = Success
 			if ($res_playserver->{'success'} eq '1' ) {
-				print "[+] | [\e[0;32mSUCCESS\e[0m] | [ \e[1;37mCHECKSUM:\e[0m ".$hash_data->{all_data}->[0]->{checksum}." ] | [ \e[1;37mANSWER:\e[0m ".$hash_data->{all_data}->[0]->{answer}." ]\n";
+				print "[+] | [ \e[0;32mSUCCESS\e[0m ] | [ \e[1;37mCHECKSUM:\e[0m ".$hash_data->{all_data}->[0]->{checksum}." ] | [ \e[1;37mANSWER:\e[0m ".$hash_data->{all_data}->[0]->{answer}." ]\n";
 				$success += 1;	
 			} else {
-				print "[-] | [\e[0;31mFAIL\e[0m] | [ \e[1;37mCHECKSUM:\e[0m ".$hash_data->{all_data}->[0]->{checksum}." ] | [ \e[1;37mANSWER:\e[0m ".$hash_data->{all_data}->[0]->{answer}." ]\n";
+				print "[-] | [ \e[0;31mFAIL\e[0m ] | [ \e[1;37mCHECKSUM:\e[0m ".$hash_data->{all_data}->[0]->{checksum}." ] | [ \e[1;37mANSWER:\e[0m ".$hash_data->{all_data}->[0]->{answer}." ]\n";
 				$fail += 1;			
 			}
 			#next checksum / answer for send next time
