@@ -1,21 +1,21 @@
 use strict;
 use warnings;
-use FindBin qw( $RealBin );
-use lib "$RealBin/Lib";
 use Config::IniFiles;
 use JSON;
-use AntiCaptcha;
-use File;
-use PlayServer;
 use Data::Dumper;
 use Win32::Console::ANSI;
 use Win32::Console;
+use FindBin qw( $RealBin );
+use lib "$RealBin/Lib";
+use AntiCaptcha;
+use File;
+use PlayServer;
 my $cfg = Config::IniFiles->new( -file => "config.ini" );
 my $c = Win32::Console->new();
-my ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime();
 
 #start ! 
-Start();
+Check_Mode();
+
 sub Start {
 	Loadlib();
 	my $startsendagain = 0;
@@ -23,11 +23,6 @@ sub Start {
 	my $fail = 0;
 	my $waitsend = 0;
 	my $hash_data;
-	print "================================\n";
-	print "PlayServer-Perl\n";
-	print "by sctnightcore\n";
-	print "github.com/sctnightcore\n";
-	print "================================\n";
 	$c->Title('[ Success: '.$success.' | Fail: '.$fail.' | WaitSend: '.$waitsend.' ] BY SCTNIGHTCORE');
 	my $playserver = PlayServer->new( Server_Url => $cfg->val('Setting','URL'), GameID => $cfg->val( 'Setting', 'GAMEID' ), ServerID => $cfg->val('Setting','SERVERID'));
 	my $anticaptcha = AntiCaptcha->new( anticaptcha_key => $cfg->val('Setting','AntiCaptchakey'));
@@ -71,19 +66,33 @@ sub Start {
 	}
 }
 
+sub Check_Mode {
+	print "================================\n";
+	print "PlayServer-Perl\n";
+	print "by sctnightcore\n";
+	print "github.com/sctnightcore\n";
+	print "================================\n";
+	Start();
+	#print "Select mode: \n [0] NormalMode\n [1] ProxyMode\n";
+	#my $mode = <STDIN>;
+	#chomp $mode;
+	#checkmode
+#	if ()
 
-sub Loadlib {
+}
+
+sub Load_lib {
 	require Config::IniFiles;
-	require LWP::UserAgent;
+	require HTTP::Tiny;
 	require JSON;
 	require AntiCaptcha;
 	require File;
 	require PlayServer;
+	require ProxyMode;
 	require WebService::Antigate;
 	require Term::ANSIColor;
 	require Win32::Console::ANSI;
 	require Win32::Console;
-	require Win32::Pipe;
 }
 
 1;
