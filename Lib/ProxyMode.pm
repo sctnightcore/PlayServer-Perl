@@ -1,7 +1,7 @@
 package ProxyMode;
 use strict;
 use warnings;
-
+my $proxy_data;
 sub Load_Proxytxt {
 	my $filename = 'proxy.txt';
 	open(my $fh, '<:encoding(UTF-8)', $filename) or die "Could not open file '$filename' $!";
