@@ -17,7 +17,7 @@ my $c = Win32::Console->new();
 Check_Mode();
 
 sub Start {
-	Loadlib();
+	Load_lib();
 	my $startsendagain = 0;
 	my $success = 0;
 	my $fail = 0;
