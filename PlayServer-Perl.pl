@@ -18,6 +18,11 @@ Check_Mode();
 
 sub Start {
 	Load_lib();
+	print "================================\n";
+	print "PlayServer-Perl\n";
+	print "by sctnightcore\n";
+	print "github.com/sctnightcore\n";
+	print "================================\n";	
 	my $startsendagain = 0;
 	my $success = 0;
 	my $fail = 0;
@@ -48,10 +53,10 @@ sub Start {
 			#check res playserver
 			#0 = Fail / 1 = Success
 			if ($res_playserver->{'success'} eq '1' ) {
-				print "[+] | [ \e[0;32mSUCCESS\e[0m ] | [ \e[1;37mCHECKSUM:\e[0m ".$hash_data->{all_data}->[0]->{checksum}." ] | [ \e[1;37mANSWER:\e[0m ".$hash_data->{all_data}->[0]->{answer}." ]\n";
+				print "[+] | [\e[1;42;1mSUCCESS\e[0m] | [ \e[1;37mCHECKSUM:\e[0m ".$hash_data->{all_data}->[0]->{checksum}." ] | [ \e[1;37mANSWER:\e[0m ".$hash_data->{all_data}->[0]->{answer}." ]\n";
 				$success += 1;	
 			} else {
-				print "[-] | [ \e[0;31mFAIL\e[0m ] | [ \e[1;37mCHECKSUM:\e[0m ".$hash_data->{all_data}->[0]->{checksum}." ] | [ \e[1;37mANSWER:\e[0m ".$hash_data->{all_data}->[0]->{answer}." ]\n";
+				print "[-] | [\e[1;41;1mFail\e[0m] | [ \e[1;37mCHECKSUM:\e[0m ".$hash_data->{all_data}->[0]->{checksum}." ] | [ \e[1;37mANSWER:\e[0m ".$hash_data->{all_data}->[0]->{answer}." ]\n";
 				$fail += 1;			
 			}
 			#next checksum / answer for send next time
@@ -66,21 +71,6 @@ sub Start {
 	}
 }
 
-sub Check_Mode {
-	print "================================\n";
-	print "PlayServer-Perl\n";
-	print "by sctnightcore\n";
-	print "github.com/sctnightcore\n";
-	print "================================\n";
-	Start();
-	#print "Select mode: \n [0] NormalMode\n [1] ProxyMode\n";
-	#my $mode = <STDIN>;
-	#chomp $mode;
-	#checkmode
-#	if ()
-
-}
-
 sub Load_lib {
 	require Config::IniFiles;
 	require HTTP::Tiny;
@@ -88,7 +78,6 @@ sub Load_lib {
 	require AntiCaptcha;
 	require File;
 	require PlayServer;
-	require ProxyMode;
 	require WebService::Antigate;
 	require Term::ANSIColor;
 	require Win32::Console::ANSI;
