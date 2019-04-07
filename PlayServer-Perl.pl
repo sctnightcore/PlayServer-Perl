@@ -14,7 +14,7 @@ my $cfg = Config::IniFiles->new( -file => "config.ini" );
 my $c = Win32::Console->new();
 
 #start ! 
-Check_Mode();
+Start();
 
 sub Start {
 	Load_lib();
