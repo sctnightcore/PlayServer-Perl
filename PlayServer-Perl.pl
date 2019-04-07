@@ -23,14 +23,15 @@ sub Start {
 	print "by sctnightcore\n";
 	print "github.com/sctnightcore\n";
 	print "================================\n";	
+	my $playserver = PlayServer->new( Server_Url => $cfg->val('Setting','URL'), GameID => $cfg->val( 'Setting', 'GAMEID' ), ServerID => $cfg->val('Setting','SERVERID'));
+	my $anticaptcha = AntiCaptcha->new( anticaptcha_key => $cfg->val('Setting','AntiCaptchakey'));
 	my $startsendagain = 0;
 	my $success = 0;
 	my $fail = 0;
 	my $waitsend = 0;
 	my $hash_data;
+	$anticaptcha->checkbalance();
 	$c->Title('[ Success: '.$success.' | Fail: '.$fail.' | WaitSend: '.$waitsend.' ] BY SCTNIGHTCORE');
-	my $playserver = PlayServer->new( Server_Url => $cfg->val('Setting','URL'), GameID => $cfg->val( 'Setting', 'GAMEID' ), ServerID => $cfg->val('Setting','SERVERID'));
-	my $anticaptcha = AntiCaptcha->new( anticaptcha_key => $cfg->val('Setting','AntiCaptchakey'));
 	while () {
 		#Get checksun
 		my $checksum = $playserver->getimg_saveimg();
