@@ -18,11 +18,11 @@ Start();
 
 sub Start {
 	Load_lib();
-	print "================================\n";
-	print "PlayServer-Perl\n";
-	print "by sctnightcore\n";
-	print "github.com/sctnightcore\n";
-	print "================================\n";	
+	print "\e[1;46;1m================================\e[0m\n";
+	print "\e[1;37mPlayServer-Perl\e[0m\n";
+	print "\e[1;37mby sctnightcore\e[0m\n";
+	print "\e[1;37mgithub.com/sctnightcore\e[0m\n";
+	print "\e[1;46;1m================================\e[0m\n";	
 	my $playserver = PlayServer->new( Server_Url => $cfg->val('Setting','URL'), GameID => $cfg->val( 'Setting', 'GAMEID' ), ServerID => $cfg->val('Setting','SERVERID'));
 	my $anticaptcha = AntiCaptcha->new( anticaptcha_key => $cfg->val('Setting','AntiCaptchakey'));
 	my $startsendagain = 0;
