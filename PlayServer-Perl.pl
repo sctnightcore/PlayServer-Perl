@@ -12,7 +12,7 @@ use File;
 use PlayServer;
 my $cfg = Config::IniFiles->new( -file => "config.ini" );
 my $c = Win32::Console->new();
-
+my ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime();
 #start ! 
 Start();
 
@@ -39,7 +39,7 @@ sub Start {
 		#push checksum / answer to hashdata
 		push (@{$hash_data->{all_data}},{ checksum => $checksum, answer => $answer });
 		# remove checksum file
-		File::file_remove($hash_data->{all_data}->[0]->{checksum});		
+		File::file_remove($checksum);		
 		#update var
 		$waitsend += 1;
 		#update process title
@@ -52,11 +52,11 @@ sub Start {
 			my $res_playserver = $playserver->send_answer($hash_data->{all_data}->[0]->{answer}, $hash_data->{all_data}->[0]->{checksum});
 			#check res playserver
 			#0 = Fail / 1 = Success
-			if ($res_playserver->{'success'} eq '1' ) {
-				print "[+] | [\e[1;42;1mSUCCESS\e[0m] | [ \e[1;37mCHECKSUM:\e[0m ".$hash_data->{all_data}->[0]->{checksum}." ] | [ \e[1;37mANSWER:\e[0m ".$hash_data->{all_data}->[0]->{answer}." ]\n";
+			if ($res_playserver->{'success'}) {
+				printf("[\e[1;37m%02d:%02d:%02d\e[0m] | [\e[1;42;1mSUCCESS\e[0m] | [\e[1;37mCHECKSUM:\e[0m %s.png] | [\e[1;37mANSWER:\e[0m %s]\n", $hour, $min, $sec,$hash_data->{all_data}->[0]->{checksum},$hash_data->{all_data}->[0]->{answer});
 				$success += 1;	
 			} else {
-				print "[-] | [\e[1;41;1mFail\e[0m] | [ \e[1;37mCHECKSUM:\e[0m ".$hash_data->{all_data}->[0]->{checksum}." ] | [ \e[1;37mANSWER:\e[0m ".$hash_data->{all_data}->[0]->{answer}." ]\n";
+				printf("[\e[1;37m%02d:%02d:%02d\e[0m] | [\e[1;41;1mFail\e[0m] | [\e[1;37mCHECKSUM:\e[0m %s.png] | [\e[1;37mANSWER:\e[0m %s]\n", $hour, $min, $sec,$hash_data->{all_data}->[0]->{checksum},$hash_data->{all_data}->[0]->{answer});
 				$fail += 1;			
 			}
 			#next checksum / answer for send next time
