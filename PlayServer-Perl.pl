@@ -28,7 +28,7 @@ sub Start {
 	print "\e[1;37mby sctnightcore\e[0m\n";
 	print "\e[1;37mgithub.com/sctnightcore\e[0m\n";
 	print "\e[1;46;1m================================\e[0m\n";
-	print "[$now_string] Clear old Checksum File..";
+	print "[\e[1;37m$now_string\e[0m] Clear old Checksum File..";
 	File::clear_oldcheckfile();
 	print "\e[1;42;1mDone\e[0m\n";
 	my $linkserver = paser_PlayServer();
@@ -64,14 +64,14 @@ sub Start {
 			#check res playserver
 			#0 = Fail / 1 = Success
 			if ($res_playserver->{'success'}) {
-				printf("[\e[1;37m%02d:%02d:%02d\e[0m] | [\e[1;42;1mSUCCESS\e[0m] | [\e[1;37mCHECKSUM:\e[0m %s.png] | [\e[1;37mANSWER:\e[0m %s]\n", $hour, $min, $sec,$hash_data->{all_data}->[0]->{checksum},$hash_data->{all_data}->[0]->{answer});
+				print "[\e[1;37m$now_string\e[0m] | [\e[1;42;1mSUCCESS\e[0m] | [\e[1;37mCHECKSUM:\e[0m $hash_data->{all_data}->[0]->{checksum}.png] | [\e[1;37mANSWER:\e[0m $hash_data->{all_data}->[0]->{answer}]\n";
 				$success += 1;	
 			} else {
-				printf("[\e[1;37m%02d:%02d:%02d\e[0m] | [\e[1;41;1mFail\e[0m] | [\e[1;37mCHECKSUM:\e[0m %s.png] | [\e[1;37mANSWER:\e[0m %s]\n", $hour, $min, $sec,$hash_data->{all_data}->[0]->{checksum},$hash_data->{all_data}->[0]->{answer});
+				print "[\e[1;37m$now_string\e[0m] | [\e[1;41;1mFail\e[0m] | [\e[1;37mCHECKSUM:\e[0m $hash_data->{all_data}->[0]->{checksum}.png] | [\e[1;37mANSWER:\e[0m $hash_data->{all_data}->[0]->{answer}]\n";
 				$fail += 1;			
 			}
 			#next checksum / answer for send next time
-			shift @{$hash_data->{all_data}}; 
+			shift @{$hash_data->{all_data}};
 			#update var time for send again 
 			$startsendagain = time() + $res_playserver->{'wait'} + 1;
 			#update process title
