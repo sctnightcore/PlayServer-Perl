@@ -8,10 +8,10 @@ use Win32::Console::ANSI;
 sub new {
     my ($class, %args) = @_;
     my $self = {};
-    $self->{ua} = HTTP::Tiny->new;
-    $self->{server_Url} = $args{Server_Url}; 
-    $self->{game_ID} = $args{GameID};
-    $self->{server_ID} = $args{ServerID};
+	$self->{ua} = HTTP::Tiny->new;
+	$self->{server_Url} = $args{Server_Url}; 
+	$self->{game_ID} = $args{GameID};
+	$self->{server_ID} = $args{ServerID};
 	return bless $self, $class;
 }
 
