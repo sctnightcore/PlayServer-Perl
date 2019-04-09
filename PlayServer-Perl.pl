@@ -31,7 +31,10 @@ sub Start {
 	print "[\e[1;37m$now_string\e[0m] Clear old Checksum File..";
 	File::clear_oldcheckfile();
 	print "\e[1;42;1mDone\e[0m\n";
+	print "[\e[1;37m$now_string\e[0m] Get URL Server..";
 	my $linkserver = paser_PlayServer();
+	print "\e[1;42;1mDone\e[0m\n";
+	print "[\e[1;37m$now_string\e[0m] Loading Process..";
 	my $playserver = PlayServer->new( Server_Url => $linkserver, GameID => $cfg->val( 'Setting', 'GAMEID' ), ServerID => $cfg->val('Setting','SERVERID'));
 	my $anticaptcha = AntiCaptcha->new( anticaptcha_key => $cfg->val('Setting','AntiCaptchakey'));
 	my $startsendagain = 0;
@@ -39,6 +42,7 @@ sub Start {
 	my $fail = 0;
 	my $waitsend = 0;
 	my $hash_data;
+	print "\e[1;42;1mDone\e[0m\n";
 	while () {
 		$anticaptcha->checkbalance();
 		$c->Title('[ Success: '.$success.' | Fail: '.$fail.' | WaitSend: '.$waitsend.' ] BY SCTNIGHTCORE');
