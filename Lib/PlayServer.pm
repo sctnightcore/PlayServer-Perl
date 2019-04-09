@@ -12,6 +12,11 @@ sub new {
 	$self->{server_Url} = $args{Server_Url};
 	$self->{game_ID} = $args{GameID};
 	$self->{server_ID} = $args{ServerID};
+	$self->{heads} = {
+		'content-type' => 'application/x-www-form-urlencoded',
+		'Origin' => 'http://playserver.in.th',
+		'referer' => $self->{server_Url}
+	};
 	return bless $self, $class;
 }
 
@@ -30,14 +35,13 @@ sub getimg_saveimg {
 
 sub send_answer {
 	my ($self, $answer, $checksum) = @_;
-	my $www_sendanswer = "http://playserver.co/index.php/Vote/ajax_submitpic/$self->{server_ID}";
-	my $res_send_answer = $self->{ua}->request('POST', $www_sendanswer, {
-		content => "server_id=$self->{server_ID}&captcha=$answer&gameid=$self->{game_ID}&checksum=$checksum",
-		headers => { 
-	  		'content-type' => 'application/x-www-form-urlencoded',
-	  		'referer' => $self->{server_Url}
-	  	}
-	});
+	my $www_sendanswer = "http://playserver.co/index.php/Vote/ajax_submitpic/$self->{server_Url}";
+	my $res_send_answer = $self->{ua}->post_form($www_sendanswer,{
+		'server_id' => $self->{server_ID},
+		'captcha' => $answer,
+		'gameid' => $self->{game_ID},
+		'checksum' => $checksum
+	},{headers => $self->{heads}});
 	if ($res_send_answer->{success}) {
 		my $send_answer_json = decode_json($res_send_answer->{content});
 		return $send_answer_json;

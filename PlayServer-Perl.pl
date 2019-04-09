@@ -19,8 +19,8 @@ my ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime();
 Start();
 
 sub Start {
-	Load_lib();
 	$c->Title("Perl-PlayServer By sctnightcore");
+	Load_lib();
 	print "\e[1;46;1m================================\e[0m\n";
 	print "\e[1;37mPlayServer-Perl\e[0m\n";
 	print "\e[1;37mby sctnightcore\e[0m\n";
