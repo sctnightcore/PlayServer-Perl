@@ -35,7 +35,7 @@ sub Start {
 	my $waitsend = 0;
 	my $hash_data;
 	while () {
-		#$anticaptcha->checkbalance();
+		$anticaptcha->checkbalance();
 		$c->Title('[ Success: '.$success.' | Fail: '.$fail.' | WaitSend: '.$waitsend.' ] BY SCTNIGHTCORE');
 		#Get checksun
 		my $checksum = $playserver->getimg_saveimg();
