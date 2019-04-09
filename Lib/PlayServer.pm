@@ -9,7 +9,7 @@ sub new {
     my ($class, %args) = @_;
     my $self = {};
 	$self->{ua} = HTTP::Tiny->new;
-	$self->{server_Url} = $args{Server_Url}; 
+	$self->{server_Url} = $args{Server_Url};
 	$self->{game_ID} = $args{GameID};
 	$self->{server_ID} = $args{ServerID};
 	return bless $self, $class;
@@ -30,12 +30,13 @@ sub getimg_saveimg {
 
 sub send_answer {
 	my ($self, $answer, $checksum) = @_;
-	my $www_sendanswer = "http://playserver.co/index.php/Vote/ajax_submitpic/$self->{server_Url}";
+	my $www_sendanswer = "http://playserver.co/index.php/Vote/ajax_submitpic/$self->{server_ID}";
 	my $res_send_answer = $self->{ua}->request('POST', $www_sendanswer, {
 		content => "server_id=$self->{server_ID}&captcha=$answer&gameid=$self->{game_ID}&checksum=$checksum",
 		headers => { 
 	  		'content-type' => 'application/x-www-form-urlencoded',
-	  		'referer' => "http://playserver.in.th/index.php/Vote/prokud/$self->{server_Url}"}
+	  		'referer' => $self->{server_Url}
+	  	}
 	});
 	if ($res_send_answer->{success}) {
 		my $send_answer_json = decode_json($res_send_answer->{content});
