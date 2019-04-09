@@ -6,6 +6,7 @@ use Data::Dumper;
 use Win32::Console::ANSI;
 use Win32::Console;
 use WWW::Mechanize;
+use POSIX;
 use URI::Encode qw(uri_encode uri_decode);
 use FindBin qw( $RealBin );
 use lib "$RealBin/Lib";
@@ -15,6 +16,7 @@ use PlayServer;
 my $cfg = Config::IniFiles->new( -file => "config.ini" );
 my $c = Win32::Console->new();
 my ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime();
+my $now_string = strftime "%H:%M:%S", localtime;
 #start ! 
 Start();
 
@@ -26,6 +28,9 @@ sub Start {
 	print "\e[1;37mby sctnightcore\e[0m\n";
 	print "\e[1;37mgithub.com/sctnightcore\e[0m\n";
 	print "\e[1;46;1m================================\e[0m\n";
+	print "[$now_string] Clear old Checksum File..";
+	File::clear_oldcheckfile();
+	print "\e[1;42;1mDone\e[0m\n";
 	my $linkserver = paser_PlayServer();
 	my $playserver = PlayServer->new( Server_Url => $linkserver, GameID => $cfg->val( 'Setting', 'GAMEID' ), ServerID => $cfg->val('Setting','SERVERID'));
 	my $anticaptcha = AntiCaptcha->new( anticaptcha_key => $cfg->val('Setting','AntiCaptchakey'));
@@ -72,8 +77,8 @@ sub Start {
 			#update process title
 			$c->Title('[ Success: '.$success.' | Fail: '.$fail.' | WaitSend: '.$waitsend.' ] BY SCTNIGHTCORE');
 		}
-		#sleep 15 sec for back to loop
-		sleep 15; 
+		#sleep 10 sec for back to loop
+		sleep 10;
 	}
 }
 
@@ -98,6 +103,7 @@ sub Load_lib {
 	require Config::IniFiles;
 	require HTTP::Tiny;
 	require JSON;
+	require POSIX;
 	require AntiCaptcha;
 	require File;
 	require PlayServer;

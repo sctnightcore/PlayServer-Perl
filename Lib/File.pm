@@ -8,4 +8,7 @@ sub file_remove {
 	my $removed = unlink($file);
 }
 
+sub clear_oldcheckfile {
+	unlink glob "img/*.png";
+}
 1;
