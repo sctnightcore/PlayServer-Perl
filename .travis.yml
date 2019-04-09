@@ -10,7 +10,5 @@ before_install:
   - "cpanm WWW::Mechanize"
   - "cpanm WebService::Antigate"  
   - "cpanm Term::ANSIColor"  
-  - "cpanm Win32::Console::ANSI"  
-  - "cpanm Win32::Console"  
   - "cpanm URI::Encode"  
 script: "perl PlayServer-Perl.pl"
