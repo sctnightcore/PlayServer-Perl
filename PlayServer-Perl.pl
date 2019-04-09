@@ -25,10 +25,7 @@ sub Start {
 	print "\e[1;46;1m================================\e[0m\n";	
 	my $playserver = PlayServer->new( Server_Url => $cfg->val('Setting','URL'), GameID => $cfg->val( 'Setting', 'GAMEID' ), ServerID => $cfg->val('Setting','SERVERID'));
 	my $anticaptcha = AntiCaptcha->new( anticaptcha_key => $cfg->val('Setting','AntiCaptchakey'));
-	my $startsendagain = 0;
-	my $success = 0;
-	my $fail = 0;
-	my $waitsend = 0;
+	my ($startsendagain,$success,$fail,$waitsend) = 0;
 	my $hash_data;
 	$anticaptcha->checkbalance();
 	$c->Title('[ Success: '.$success.' | Fail: '.$fail.' | WaitSend: '.$waitsend.' ] BY SCTNIGHTCORE');
@@ -37,10 +34,10 @@ sub Start {
 		my $checksum = $playserver->getimg_saveimg();
 		#Get answer
 		my $answer = $anticaptcha->get_answer($checksum);
-		#push checksum / answer to hashdata
-		push (@{$hash_data->{all_data}},{ checksum => $checksum, answer => $answer });
 		# remove checksum file
 		File::file_remove($checksum);		
+		#push checksum / answer to hashdata
+		push (@{$hash_data->{all_data}},{ checksum => $checksum, answer => $answer });
 		#update var
 		$waitsend += 1;
 		#update process title
