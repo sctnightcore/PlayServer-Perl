@@ -87,7 +87,7 @@ sub Start {
 }
 
 sub inputfromkeyboard {
-	print "\nCaptcha is: ";
+	print "\nCaptcha is: \n";
 	my $answer = <STDIN>;
 	chomp $answer;
 	return $answer;

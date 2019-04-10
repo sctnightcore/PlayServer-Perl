@@ -15,7 +15,7 @@ sub new {
 	$self->{heads} = {
 		'content-type' => 'application/x-www-form-urlencoded',
 		'Origin' => 'http://playserver.in.th',
-		'referer' => $self->{server_Url}
+		'referer' => 'http://playserver.in.th/index.php/Vote/prokud/'.$self->{server_Url}
 	};
 	return bless $self, $class;
 }
@@ -35,8 +35,7 @@ sub getimg_saveimg {
 
 sub send_answer {
 	my ($self, $answer, $checksum) = @_;
-	my $www_sendanswer = "http://playserver.co/index.php/Vote/ajax_submitpic/$self->{server_Url}";
-	my $res_send_answer = $self->{ua}->post_form($www_sendanswer,{
+	my $res_send_answer = $self->{ua}->post_form('http://playserver.co/index.php/Vote/ajax_submitpic/'.$self->{server_Url},{
 		'server_id' => $self->{server_ID},
 		'captcha' => $answer,
 		'gameid' => $self->{game_ID},
