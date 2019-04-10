@@ -28,13 +28,12 @@ sub Start {
 	print "\e[1;37mby sctnightcore\e[0m\n";
 	print "\e[1;37mgithub.com/sctnightcore\e[0m\n";
 	print "\e[1;46;1m================================\e[0m\n";
-	print "[\e[1;37m$now_string\e[0m] Clear old Checksum File..";
+	print "[\e[1;37m$now_string\e[0m] - Clear old Checksum File..";
 	File::clear_oldcheckfile();
-	print "\e[1;42;1mDone\e[0m\n";
-	print "[\e[1;37m$now_string\e[0m] Get URL Server..";
+	print "[\e[1;37m$now_string\e[0m] - Loading Config..";
+	checkconfig();
+	print "[\e[1;37m$now_string\e[0m] - Loading Process..";
 	my $linkserver = paser_PlayServer();
-	print "\e[1;42;1mDone\e[0m\n";
-	print "[\e[1;37m$now_string\e[0m] Loading Process..";
 	my $playserver = PlayServer->new( Server_Url => $linkserver, GameID => $cfg->val( 'Setting', 'GAMEID' ), ServerID => $cfg->val('Setting','SERVERID'));
 	my $anticaptcha = AntiCaptcha->new( anticaptcha_key => $cfg->val('Setting','AntiCaptchakey'));
 	my $startsendagain = 0;
@@ -91,6 +90,19 @@ sub Start {
 			print "\e[1;41;1mCannot Get Checksum from PlayServer\e[0m\n";
 			return;
 		}
+	}
+}
+
+sub checkconfig {
+	my $antikey = $cfg->val('Setting','AntiCaptchakey');
+	my $gameid = $cfg->val( 'Setting', 'GAMEID' );
+	my $serverid = $cfg->val('Setting','SERVERID');
+	if ( ( $antikey eq '' ) || ( $gameid eq '' ) || ( $serverid eq '') ) {
+		print "\e[1;41;1mFail [Recheck config.ini]!\e[0m\n";
+		sleep 10;
+		exit;
+	} else {
+		print "\e[1;42;1mDone\e[0m\n";
 	}
 }
 
