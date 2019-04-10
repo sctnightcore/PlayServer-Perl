@@ -41,48 +41,56 @@ sub Start {
 	my $success = 0;
 	my $fail = 0;
 	my $waitsend = 0;
+	my $count = 0;
 	my $hash_data;
 	print "\e[1;42;1mDone\e[0m\n";
 	while () {
+		$c->Title('[ Count: '.$count.' | Success: '.$success.' | Fail: '.$fail.' | WaitSend: '.$waitsend.' ] BY SCTNIGHTCORE');
 		$anticaptcha->checkbalance();
-		$c->Title('[ Success: '.$success.' | Fail: '.$fail.' | WaitSend: '.$waitsend.' ] BY SCTNIGHTCORE');
 		#Get checksun
 		my $checksum = $playserver->getimg_saveimg();
-		#Get answer
-		#my $answer = inputfromkeyboard(); #for test ! 
-		my $answer = $anticaptcha->get_answer($checksum);
-		# remove checksum file
-		File::file_remove($checksum);		
-		#push checksum / answer to hashdata
-		push (@{$hash_data->{all_data}},{ checksum => $checksum, answer => $answer });
-		#update var
-		$waitsend += 1;
-		#update process title
-		$c->Title('[ Success: '.$success.' | Fail: '.$fail.' | WaitSend: '.$waitsend.' ] BY SCTNIGHTCORE');
-		#send Answer evey 61 sec
-		if (time() >= $startsendagain) {
+		#check if have checksum file 
+		if (defined $checksum) {
+			#Get answer
+			#my $answer = inputfromkeyboard(); #for test ! 
+			my $answer = $anticaptcha->get_answer($checksum);
+			# remove checksum file
+			File::file_remove($checksum);		
+			#push checksum / answer to hashdata
+			push (@{$hash_data->{all_data}},{ checksum => $checksum, answer => $answer });
 			#update var
-			$waitsend -= 1;
-			#send answer
-			my $res_playserver = $playserver->send_answer($hash_data->{all_data}->[0]->{answer}, $hash_data->{all_data}->[0]->{checksum});
-			#check res playserver
-			#0 = Fail / 1 = Success
-			if ($res_playserver->{'success'}) {
-				print "[\e[1;37m$now_string\e[0m] | [\e[1;42;1mSUCCESS\e[0m] | [\e[1;37mCHECKSUM:\e[0m $hash_data->{all_data}->[0]->{checksum}.png] | [\e[1;37mANSWER:\e[0m $hash_data->{all_data}->[0]->{answer}]\n";
-				$success += 1;	
-			} else {
-				print "[\e[1;37m$now_string\e[0m] | [\e[1;41;1mFail\e[0m] | [\e[1;37mCHECKSUM:\e[0m $hash_data->{all_data}->[0]->{checksum}.png] | [\e[1;37mANSWER:\e[0m $hash_data->{all_data}->[0]->{answer}]\n";
-				$fail += 1;			
-			}
-			#next checksum / answer for send next time
-			shift @{$hash_data->{all_data}};
-			#update var time for send again 
-			$startsendagain = time() + $res_playserver->{'wait'} + 1;
+			$waitsend += 1;
+			$count += 1;
 			#update process title
-			$c->Title('[ Success: '.$success.' | Fail: '.$fail.' | WaitSend: '.$waitsend.' ] BY SCTNIGHTCORE');
+			$c->Title('[ Count: '.$count.' | Success: '.$success.' | Fail: '.$fail.' | WaitSend: '.$waitsend.' ] BY SCTNIGHTCORE');
+			#send Answer evey 61 sec
+			if (time() >= $startsendagain) {
+				#update var
+				$waitsend -= 1;
+				#send answer
+				my $res_playserver = $playserver->send_answer($hash_data->{all_data}->[0]->{answer}, $hash_data->{all_data}->[0]->{checksum});
+				#check res playserver
+				#0 = Fail / 1 = Success
+				if ($res_playserver->{'success'}) {
+					print "[\e[1;37m$now_string\e[0m] | [\e[1;42;1mSUCCESS\e[0m] | [\e[1;37mCHECKSUM:\e[0m $hash_data->{all_data}->[0]->{checksum}.png] | [\e[1;37mANSWER:\e[0m $hash_data->{all_data}->[0]->{answer}]\n";
+					$success += 1;	
+				} else {
+					print "[\e[1;37m$now_string\e[0m] | [\e[1;41;1mFail\e[0m] | [\e[1;37mCHECKSUM:\e[0m $hash_data->{all_data}->[0]->{checksum}.png] | [\e[1;37mANSWER:\e[0m $hash_data->{all_data}->[0]->{answer}]\n";
+					$fail += 1;			
+				}
+				#next checksum / answer for send next time
+				shift @{$hash_data->{all_data}};
+				#update var time for send again 
+				$startsendagain = time() + $res_playserver->{'wait'} + 1;
+				#update process title
+				$c->Title('[ Count: '.$count.' | Success: '.$success.' | Fail: '.$fail.' | WaitSend: '.$waitsend.' ] BY SCTNIGHTCORE');
+			}
+			#sleep 10 sec for back to loop
+			sleep 10;
+		} else {
+			print "\e[1;41;1mCannot Get Checksum from PlayServer\e[0m\n";
+			return;
 		}
-		#sleep 10 sec for back to loop
-		sleep 10;
 	}
 }
 

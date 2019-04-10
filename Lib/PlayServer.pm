@@ -27,9 +27,9 @@ sub getimg_saveimg {
 		my $getimg_saveimg_json = decode_json($res_getimg_saveimg->{content});
 		my $checksum = $getimg_saveimg_json->{'checksum'};
 		$self->{ua}->mirror('http://playserver.co/index.php/VoteGetImage/'.$checksum, 'img/'.$checksum.'.png' );
-		return ($checksum);
+		return $checksum;
 	} else {
-		return 1;
+		return;
 	}
 }
 
@@ -45,7 +45,7 @@ sub send_answer {
 		my $send_answer_json = decode_json($res_send_answer->{content});
 		return $send_answer_json;
 	} else {
-		return 1;
+		return;
 	}
 }
 1;
