@@ -18,6 +18,7 @@ my $c = Win32::Console->new();
 my ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime();
 my $now_string = strftime "%H:%M:%S", localtime;
 #start ! 
+$|++;
 Start();
 
 sub Start {
@@ -32,7 +33,7 @@ sub Start {
 	File::clear_oldcheckfile();
 	print "[\e[1;37m$now_string\e[0m] - Loading Config..";
 	checkconfig();
-	print "[\e[1;37m$now_string\e[0m] - Loading Process..";
+	print "[\e[1;37m$now_string\e[0m] - Get Url Server..";
 	my $linkserver = paser_PlayServer();
 	my $playserver = PlayServer->new( Server_Url => $linkserver, GameID => $cfg->val( 'Setting', 'GAMEID' ), ServerID => $cfg->val('Setting','SERVERID'));
 	my $anticaptcha = AntiCaptcha->new( anticaptcha_key => $cfg->val('Setting','AntiCaptchakey'));
@@ -42,7 +43,6 @@ sub Start {
 	my $waitsend = 0;
 	my $count = 0;
 	my $hash_data;
-	print "\e[1;42;1mDone\e[0m\n";
 	while () {
 		$c->Title('[ Count: '.$count.' | Success: '.$success.' | Fail: '.$fail.' | WaitSend: '.$waitsend.' ] BY SCTNIGHTCORE');
 		$anticaptcha->checkbalance();
@@ -71,10 +71,10 @@ sub Start {
 				#check res playserver
 				#0 = Fail / 1 = Success
 				if ($res_playserver->{'success'}) {
-					print "[\e[1;37m$now_string\e[0m] | [\e[1;42;1mSUCCESS\e[0m] | [\e[1;37mCHECKSUM:\e[0m $hash_data->{all_data}->[0]->{checksum}.png] | [\e[1;37mANSWER:\e[0m $hash_data->{all_data}->[0]->{answer}]\n";
+					print "[\e[1;37m$now_string\e[0m] - [\e[1;42;1mSUCCESS\e[0m] | [\e[1;37mCHECKSUM:\e[0m $hash_data->{all_data}->[0]->{checksum}.png] | [\e[1;37mANSWER:\e[0m $hash_data->{all_data}->[0]->{answer}]\n";
 					$success += 1;	
 				} else {
-					print "[\e[1;37m$now_string\e[0m] | [\e[1;41;1mFail\e[0m] | [\e[1;37mCHECKSUM:\e[0m $hash_data->{all_data}->[0]->{checksum}.png] | [\e[1;37mANSWER:\e[0m $hash_data->{all_data}->[0]->{answer}]\n";
+					print "[\e[1;37m$now_string\e[0m] - [\e[1;41;1mFail\e[0m] | [\e[1;37mCHECKSUM:\e[0m $hash_data->{all_data}->[0]->{checksum}.png] | [\e[1;37mANSWER:\e[0m $hash_data->{all_data}->[0]->{answer}]\n";
 					$fail += 1;			
 				}
 				#next checksum / answer for send next time
@@ -102,6 +102,7 @@ sub checkconfig {
 		sleep 10;
 		exit;
 	} else {
+		sleep 1;
 		print "\e[1;42;1mDone\e[0m\n";
 	}
 }
@@ -120,6 +121,7 @@ sub paser_PlayServer {
 	for my $link ( @links ) {
 		my $url = $link->url;
 		my @result = split '/', $url;
+		print "\e[1;42;1mDone\e[0m\n";	
 		return uri_encode($result[6]);
 	}
 }

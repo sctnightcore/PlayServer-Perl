@@ -10,6 +10,7 @@ sub file_remove {
 
 sub clear_oldcheckfile {
 	unlink glob "img/*.png";
+	sleep 1;
 	print "\e[1;42;1mDone\e[0m\n";
 }
 1;
