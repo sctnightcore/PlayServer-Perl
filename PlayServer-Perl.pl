@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 use Config::IniFiles;
-use JSON;
+use JSON::XS;
 use Data::Dumper;
 use Win32::Console::ANSI;
 use Win32::Console;
@@ -128,7 +128,7 @@ sub paser_PlayServer {
 sub Load_lib {
 	require Config::IniFiles;
 	require HTTP::Tiny;
-	require JSON;
+	require JSON::XS;
 	require POSIX;
 	require AntiCaptcha;
 	require File;

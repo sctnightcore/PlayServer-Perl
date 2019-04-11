@@ -1,6 +1,6 @@
 package PlayServer;
 use strict;
-use JSON;
+use JSON::XS;
 use HTTP::Tiny;
 use Data::Dumper;
 use Win32::Console::ANSI;
@@ -9,6 +9,7 @@ sub new {
     my ($class, %args) = @_;
     my $self = {};
 	$self->{ua} = HTTP::Tiny->new;
+	$self->{json} = JSON::XS->new->allow_nonref;
 	$self->{server_Url} = $args{Server_Url};
 	$self->{game_ID} = $args{GameID};
 	$self->{server_ID} = $args{ServerID};
@@ -24,7 +25,7 @@ sub getimg_saveimg {
 	my ($self) = @_;
 	my $res_getimg_saveimg = $self->{ua}->request('POST', 'http://playserver.co/index.php/Vote/ajax_getpic/'.$self->{server_Url});
 	if ($res_getimg_saveimg->{success}) {
-		my $getimg_saveimg_json = decode_json($res_getimg_saveimg->{content});
+		my $getimg_saveimg_json = $self->{json}->decode($res_getimg_saveimg->{content});
 		my $checksum = $getimg_saveimg_json->{'checksum'};
 		$self->{ua}->mirror('http://playserver.co/index.php/VoteGetImage/'.$checksum, 'img/'.$checksum.'.png' );
 		return $checksum;
@@ -42,7 +43,7 @@ sub send_answer {
 		'checksum' => $checksum
 	},{headers => $self->{heads}});
 	if ($res_send_answer->{success}) {
-		my $send_answer_json = decode_json($res_send_answer->{content});
+		my $send_answer_json = $self->{json}->decode($res_send_answer->{content});
 		return $send_answer_json;
 	} else {
 		return;
