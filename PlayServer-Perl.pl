@@ -13,8 +13,8 @@ use lib "$RealBin/Lib";
 use AntiCaptcha;
 use File;
 use PlayServer;
+
 my $cfg = Config::IniFiles->new( -file => "config.ini" );
-my $c = Win32::Console->new();
 my ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime();
 my $now_string = strftime "%H:%M:%S", localtime;
 #start ! 
@@ -22,7 +22,7 @@ $|++;
 Start();
 
 sub Start {
-	$c->Title("Perl-PlayServer By sctnightcore");
+	update_titlebar("Perl-PlayServer By sctnightcore");
 	Load_lib();
 	print "\e[1;46;1m================================\e[0m\n";
 	print "\e[1;37mPlayServer-Perl\e[0m\n";
@@ -44,7 +44,7 @@ sub Start {
 	my $count = 0;
 	my $hash_data;
 	while () {
-		$c->Title('[ Count: '.$count.' | Success: '.$success.' | Fail: '.$fail.' | WaitSend: '.$waitsend.' ] BY SCTNIGHTCORE');
+		update_titlebar('[ Count: '.$count.' | Success: '.$success.' | Fail: '.$fail.' | WaitSend: '.$waitsend.' ] BY SCTNIGHTCORE');
 		$anticaptcha->checkbalance();
 		#Get checksun
 		my $checksum = $playserver->getimg_saveimg();
@@ -61,7 +61,7 @@ sub Start {
 			$waitsend += 1;
 			$count += 1;
 			#update process title
-			$c->Title('[ Count: '.$count.' | Success: '.$success.' | Fail: '.$fail.' | WaitSend: '.$waitsend.' ] BY SCTNIGHTCORE');
+			update_titlebar('[ Count: '.$count.' | Success: '.$success.' | Fail: '.$fail.' | WaitSend: '.$waitsend.' ] BY SCTNIGHTCORE');
 			#send Answer evey 61 sec
 			if (time() >= $startsendagain) {
 				#update var
@@ -82,7 +82,7 @@ sub Start {
 				#update var time for send again 
 				$startsendagain = time() + $res_playserver->{'wait'} + 1;
 				#update process title
-				$c->Title('[ Count: '.$count.' | Success: '.$success.' | Fail: '.$fail.' | WaitSend: '.$waitsend.' ] BY SCTNIGHTCORE');
+				update_titlebar('[ Count: '.$count.' | Success: '.$success.' | Fail: '.$fail.' | WaitSend: '.$waitsend.' ] BY SCTNIGHTCORE');
 			}
 			#sleep 10 sec for back to loop
 			sleep 10;
@@ -116,15 +116,26 @@ sub inputfromkeyboard {
 
 sub paser_PlayServer {
 	my $mech = WWW::Mechanize->new();
+	my $k;
 	$mech->get( 'https://playserver.in.th/index.php/Server/'.$cfg->val('Setting','SERVERID'));
 	my @links = $mech->find_all_links(url_regex => qr/prokud\.*/);
 	for my $link ( @links ) {
 		my $url = $link->url;
 		my @result = split '/', $url;
-		print "\e[1;42;1mDone\e[0m\n";	
-		return uri_encode($result[6]);
+		$k = $result[6];
+	}
+	print "\e[1;42;1mDone\e[0m\n";
+	return uri_encode($k);
+}
+
+sub update_titlebar {
+	my ($msg) = @_;
+	if ($^O eq 'MSWin32') {
+		my $c = Win32::Console->new();
+		$c->Title($msg);
 	}
 }
+
 sub Load_lib {
 	require Config::IniFiles;
 	require HTTP::Tiny;
@@ -136,8 +147,10 @@ sub Load_lib {
 	require WWW::Mechanize;
 	require WebService::Antigate;
 	require Term::ANSIColor;
-	require Win32::Console::ANSI;
-	require Win32::Console;
+	if ($^O eq 'MSWin32') {
+		require Win32::Console::ANSI;
+		require Win32::Console;
+	}
 	require URI::Encode;
 }
 
