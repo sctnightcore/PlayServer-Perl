@@ -50,13 +50,17 @@ sub Start {
 		my $checksum = $playserver->getimg_saveimg();
 		#check if have checksum file 
 		if (defined $checksum) {
-			#Get answer
+			#get taskID 
+			my $taskid = $anticaptcha->get_taskid($checksum);
+			#sleep 2 sec
+			sleep(2);
+			#get answer
+			my $answer = $anticaptcha->get_answer($taskid);
 			#my $answer = inputfromkeyboard(); #for test ! 
-			my $answer = $anticaptcha->get_answer($checksum);
 			# remove checksum file
 			File::file_remove($checksum);		
 			#push checksum / answer to hashdata
-			push (@{$hash_data->{all_data}},{ checksum => $checksum, answer => $answer });
+			push (@{$hash_data->{all_data}},{ checksum => $checksum, answer => $answer, taskid => $taskid});
 			#update var
 			$waitsend += 1;
 			$count += 1;
@@ -71,12 +75,16 @@ sub Start {
 				#check res playserver
 				#0 = Fail / 1 = Success
 				if ($res_playserver->{'success'}) {
-					print "[\e[1;37m$now_string\e[0m] - [\e[1;42;1mSUCCESS\e[0m] | [\e[1;37mCHECKSUM:\e[0m $hash_data->{all_data}->[0]->{checksum}.png] | [\e[1;37mANSWER:\e[0m $hash_data->{all_data}->[0]->{answer}]\n";
+					print "[\e[1;37m$now_string\e[0m] - [\e[1;42;1mSUCCESS\e[0m] | [\e[1;TASKID:\e[0m $hash_data->{all_data}->[0]->{taskid}] | [\e[1;37mCHECKSUM:\e[0m $hash_data->{all_data}->[0]->{checksum}.png] | [\e[1;37mANSWER:\e[0m $hash_data->{all_data}->[0]->{answer}]\n";
 					$success += 1;	
 				} else {
-					print "[\e[1;37m$now_string\e[0m] - [\e[1;41;1mFail\e[0m] | [\e[1;37mCHECKSUM:\e[0m $hash_data->{all_data}->[0]->{checksum}.png] | [\e[1;37mANSWER:\e[0m $hash_data->{all_data}->[0]->{answer}]\n";
-					$fail += 1;			
+					print "[\e[1;37m$now_string\e[0m] - [\e[1;41;1mFail\e[0m] | [\e[1;TASKID:\e[0m $hash_data->{all_data}->[0]->{taskid}] | [\e[1;37mCHECKSUM:\e[0m $hash_data->{all_data}->[0]->{checksum}.png] | [\e[1;37mANSWER:\e[0m $hash_data->{all_data}->[0]->{answer}]\n";
+					$fail += 1;
+					#TODO config auto report 
+					report_imgcaptcha($hash_data->{all_data}->[0]->{taskid});
+
 				}
+				
 				#next checksum / answer for send next time
 				shift @{$hash_data->{all_data}};
 				#update var time for send again 
