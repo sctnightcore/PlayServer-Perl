@@ -1,1 +1,1 @@
-perlapp --icon icon.ico --lib Lib --shared public --norunlib --exe PlayServer-Perl.exe PlayServer-Perl.pl
+perlapp --icon icon.ico --lib Lib --shared public --norunlib --info "CompanyName=Perl PlayServer by sctnightcore;FileDescription=Perl PlayServer by sctnightcore;InternalName=Perl PlayServer by sctnightcore;OriginalFilename=Perl PlayServer by sctnightcore;ProductName=Perl PlayServer by sctnightcore" --exe PlayServer-Perl.exe PlayServer-Perl.pl
