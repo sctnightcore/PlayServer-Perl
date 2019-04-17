@@ -50,12 +50,8 @@ sub Start {
 		my $checksum = $playserver->getimg_saveimg();
 		#check if have checksum file 
 		if (defined $checksum) {
-			#get taskID 
-			my $taskid = $anticaptcha->get_taskid($checksum);
-			#sleep 2 sec
-			sleep(2);
-			#get answer
-			my $answer = $anticaptcha->get_answer($taskid);
+			#get taskID / get answer
+			my ($taskid,$answer) = $anticaptcha->get_taskid_and_answer($checksum);
 			#my $answer = inputfromkeyboard(); #for test ! 
 			# remove checksum file
 			File::file_remove($checksum);		
