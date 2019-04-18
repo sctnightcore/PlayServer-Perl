@@ -13,17 +13,14 @@ sub new {
 	$self->{server_Url} = $args{Server_Url};
 	$self->{game_ID} = $args{GameID};
 	$self->{server_ID} = $args{ServerID};
-	$self->{heads} = {
-		'content-type' => 'application/x-www-form-urlencoded',
-		'Origin' => 'http://playserver.in.th',
-		'referer' => 'http://playserver.in.th/index.php/Vote/prokud/'.$self->{server_Url}
-	};
+	$self->{heads} = {'content-type' => 'application/x-www-form-urlencoded', 'Origin' => 'http://playserver.in.th', 'referer' => 'http://playserver.in.th/index.php/Vote/prokud/'.$self->{server_Url}};
 	return bless $self, $class;
 }
 
 sub getimg_saveimg {
 	my ($self) = @_;
-	my $res_getimg_saveimg = $self->{ua}->request('POST', 'http://playserver.co/index.php/Vote/ajax_getpic/'.$self->{server_Url});
+	my $www = 'http://playserver.co/index.php/Vote/ajax_getpic/'.$self->{server_Url};
+	my $res_getimg_saveimg = $self->{ua}->request('POST', $www);
 	if ($res_getimg_saveimg->{success}) {
 		my $getimg_saveimg_json = $self->{json}->decode($res_getimg_saveimg->{content});
 		my $checksum = $getimg_saveimg_json->{'checksum'};
@@ -38,9 +35,9 @@ sub getimg_saveimg {
 sub send_answer {
 	my ($self, $answer, $checksum) = @_;
 	my $www = 'http://playserver.co/index.php/Vote/ajax_submitpic/'.$self->{server_Url};
-	my %form_data = ( 'server_id' => $self->{server_ID}, 'captcha' => $answer, 'gameid' => $self->{game_ID}, 'checksum' => $checksum );
-	my %heads = ( headers => $self->{heads} );
-	my $res_send_answer = $self->{ua}->post_form($www, \%form_data, \%heads);
+	my $form_data = { 'server_id' => $self->{server_ID}, 'captcha' => $answer, 'gameid' => $self->{game_ID}, 'checksum' => $checksum };
+	my $heads = { headers => $self->{heads} };
+	my $res_send_answer = $self->{ua}->post_form($www, $form_data, $heads);
 	if ($res_send_answer->{success}) {
 		my $send_answer_json = $self->{json}->decode($res_send_answer->{content});
 		return $send_answer_json;
