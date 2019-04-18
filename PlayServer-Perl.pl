@@ -7,7 +7,6 @@ use Win32::Console::ANSI;
 use Win32::Console;
 use WWW::Mechanize;
 use POSIX;
-use URI::Encode qw(uri_encode uri_decode);
 use FindBin qw( $RealBin );
 use lib "$RealBin/Lib";
 use AntiCaptcha;
@@ -29,16 +28,13 @@ sub Start {
 	print "\e[1;37mby sctnightcore\e[0m\n";
 	print "\e[1;37mgithub.com/sctnightcore\e[0m\n";
 	print "\e[1;46;1m================================\e[0m\n";
-	print "[\e[1;37m$now_string\e[0m] - Clear old Checksum File..";
-	File::clear_oldcheckfile();
-	print "[\e[1;37m$now_string\e[0m] - Loading Config..";
-	checkconfig();
-	print "[\e[1;37m$now_string\e[0m] - Get Url Server..";
-	my $linkserver = paser_PlayServer();
-	my $playserver = PlayServer->new( Server_Url => $linkserver, GameID => $cfg->val( 'Setting', 'GAMEID' ), ServerID => $cfg->val('Setting','SERVERID'));
+	File::clear_oldchecksum();
+	check_config();
+	my $hash_data;
+	my $playserver = PlayServer->new( GameID => $cfg->val( 'Setting', 'GAMEID' ), ServerID => $cfg->val('Setting','SERVERID'));
 	my $anticaptcha = AntiCaptcha->new( anticaptcha_key => $cfg->val('Setting','AntiCaptchakey'));
 	my ($startsendagain,$success,$fail,$waitsend,$count) = (0,0,0,0,0);
-	my $hash_data;
+	$playserver->getserver_link();	
 	while () {
 		update_titlebar('[ Count: '.$count.' | Success: '.$success.' | Fail: '.$fail.' | WaitSend: '.$waitsend.' ] BY SCTNIGHTCORE');
 		my $balance = $anticaptcha->checkbalance();
@@ -67,10 +63,10 @@ sub Start {
 				#check res playserver
 				#0 = Fail / 1 = Success
 				if ($res_playserver->{'success'}) {
-					print "[\e[1;37m$now_string\e[0m] - [\e[1;42;1mSUCCESS\e[0m] | [\e[1;TASKID:\e[0m $hash_data->{all_data}->[0]->{taskid}] | [\e[1;37mCHECKSUM:\e[0m $hash_data->{all_data}->[0]->{checksum}.png] | [\e[1;37mANSWER:\e[0m $hash_data->{all_data}->[0]->{answer}]\n";
+					print "[\e[1;37m$now_string\e[0m] - [\e[1;42;1mSUCCESS\e[0m] | [\e[1;37mCHECKSUM:\e[0m $hash_data->{all_data}->[0]->{checksum}] | [\e[1;37mANSWER:\e[0m $hash_data->{all_data}->[0]->{answer}]\n";
 					$success += 1;	
 				} else {
-					print "[\e[1;37m$now_string\e[0m] - [\e[1;41;1mFail\e[0m] | [\e[1;TASKID:\e[0m $hash_data->{all_data}->[0]->{taskid}] | [\e[1;37mCHECKSUM:\e[0m $hash_data->{all_data}->[0]->{checksum}.png] | [\e[1;37mANSWER:\e[0m $hash_data->{all_data}->[0]->{answer}]\n";
+					print "[\e[1;37m$now_string\e[0m] - [\e[1;41;1mFail\e[0m] | [\e[1;37mCHECKSUM:\e[0m $hash_data->{all_data}->[0]->{checksum}] | [\e[1;37mANSWER:\e[0m $hash_data->{all_data}->[0]->{answer}]\n";
 					$fail += 1;
 					#TODO config auto report 
 					$anticaptcha->report_imgcaptcha($hash_data->{all_data}->[0]->{taskid});
@@ -85,24 +81,18 @@ sub Start {
 			}
 			#sleep 10 sec for back to loop
 			sleep 10;
-		} else {
-			print "\e[1;41;1m$checksum is undef\e[0m\n";
-			return;
 		}
 	}
 }
 
-sub checkconfig {
+sub check_config {
 	my $antikey = $cfg->val('Setting','AntiCaptchakey');
 	my $gameid = $cfg->val( 'Setting', 'GAMEID' );
 	my $serverid = $cfg->val('Setting','SERVERID');
 	if ( ( $antikey eq '' ) || ( $gameid eq '' ) || ( $serverid eq '') ) {
-		print "\e[1;41;1mFail [Recheck config.ini]!\e[0m\n";
+		print "\e[1;41;1m[Recheck config.ini]!\e[0m\n";
 		sleep 10;
 		exit;
-	} else {
-		sleep 1;
-		print "\e[1;42;1mDone\e[0m\n";
 	}
 }
 
@@ -111,20 +101,6 @@ sub inputfromkeyboard {
 	my $answer = <STDIN>;
 	chomp $answer;
 	return $answer;
-}
-
-sub paser_PlayServer {
-	my $mech = WWW::Mechanize->new();
-	my $k;
-	$mech->get( 'https://playserver.in.th/index.php/Server/'.$cfg->val('Setting','SERVERID'));
-	my @links = $mech->find_all_links(url_regex => qr/prokud\.*/);
-	for my $link ( @links ) {
-		my $url = $link->url;
-		my @result = split '/', $url;
-		$k = $result[6];
-	}
-	print "\e[1;42;1mDone\e[0m\n";
-	return uri_encode($k);
 }
 
 sub update_titlebar {

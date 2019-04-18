@@ -8,9 +8,7 @@ sub file_remove {
 	my $removed = unlink($file);
 }
 
-sub clear_oldcheckfile {
+sub clear_oldchecksum {
 	unlink glob "img/*.png";
-	sleep 1;
-	print "\e[1;42;1mDone\e[0m\n";
 }
 1;

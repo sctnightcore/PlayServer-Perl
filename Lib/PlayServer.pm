@@ -3,18 +3,33 @@ use strict;
 use JSON::XS;
 use HTTP::Tiny;
 use Data::Dumper;
+use WWW::Mechanize;
 use Win32::Console::ANSI;
+use URI::Encode qw(uri_encode uri_decode);
 
 sub new {
     my ($class, %args) = @_;
     my $self = {};
 	$self->{ua} = HTTP::Tiny->new;
 	$self->{json} = JSON::XS->new->allow_nonref;
-	$self->{server_Url} = $args{Server_Url};
 	$self->{game_ID} = $args{GameID};
 	$self->{server_ID} = $args{ServerID};
 	$self->{heads} = {'content-type' => 'application/x-www-form-urlencoded', 'Origin' => 'http://playserver.in.th', 'referer' => 'http://playserver.in.th/index.php/Vote/prokud/'.$self->{server_Url}};
 	return bless $self, $class;
+}
+
+sub getserver_link {
+	my ($self) = @_;
+	my $mech = WWW::Mechanize->new();
+	my $k;
+	$mech->get( 'https://playserver.in.th/index.php/Server/'.$self->{server_ID});
+	my @links = $mech->find_all_links(url_regex => qr/prokud\.*/);
+	for my $link ( @links ) {
+		my $url = $link->url;
+		my @result = split '/', $url;
+		$k = uri_encode($result[6]);
+	}
+	$self->{server_Url} = $k;
 }
 
 sub getimg_saveimg {
