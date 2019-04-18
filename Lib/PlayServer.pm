@@ -30,6 +30,7 @@ sub getimg_saveimg {
 		$self->{ua}->mirror('http://playserver.co/index.php/VoteGetImage/'.$checksum, 'img/'.$checksum.'.png' );
 		return $checksum;
 	} else {
+		print "\e[1;41;1m[Cannot Get Checksum from PlayServer.in.th]\e[0m\n";
 		return;
 	}
 }
@@ -46,6 +47,7 @@ sub send_answer {
 		my $send_answer_json = $self->{json}->decode($res_send_answer->{content});
 		return $send_answer_json;
 	} else {
+		print "\e[1;41;1m[Cannot Send Answer to PlayServer.in.th]\e[0m\n";
 		return;
 	}
 }
