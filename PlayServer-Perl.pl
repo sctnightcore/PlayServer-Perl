@@ -77,10 +77,9 @@ sub Start {
 					print "[\e[1;37m$now_string\e[0m] - [\e[1;41;1mFail\e[0m] | [\e[1;TASKID:\e[0m $hash_data->{all_data}->[0]->{taskid}] | [\e[1;37mCHECKSUM:\e[0m $hash_data->{all_data}->[0]->{checksum}.png] | [\e[1;37mANSWER:\e[0m $hash_data->{all_data}->[0]->{answer}]\n";
 					$fail += 1;
 					#TODO config auto report 
-					report_imgcaptcha($hash_data->{all_data}->[0]->{taskid});
+					$anticaptcha->report_imgcaptcha($hash_data->{all_data}->[0]->{taskid});
 
 				}
-				
 				#next checksum / answer for send next time
 				shift @{$hash_data->{all_data}};
 				#update var time for send again 

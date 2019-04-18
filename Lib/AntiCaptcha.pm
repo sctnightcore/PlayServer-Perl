@@ -16,17 +16,13 @@ sub new {
 sub get_taskid_and_answer {
 	my ($self,$checksum) = @_;
 	my $taskid = $self->{wa}->upload(file => "img/$checksum.png");
-	unless($taskid)
-	{
-      die "Error while uploading captcha: ", $self->{wa}->errno, " (", $self->{wa}->errstr, ")";
+	unless($taskid) {
+      print "\e[1;41;1mError while uploading captcha\e[0m: ", $self->{wa}->errno, " (", $self->{wa}->errstr, ")";
 	}
-
 	my $answer = $self->{wa}->recognize($taskid);
-	unless($answer)
-	{
-      die "Error while recognizing captcha: ", $self->{wa}->errno, " (", $self->{wa}->errstr, ")";
+	unless($answer) {
+      print "\e[1;41;1mError while recognizing captcha\e[0m: ", $self->{wa}->errno, " (", $self->{wa}->errstr, ")";
 	}
-
 	return ($taskid,$answer);	
 }
 
