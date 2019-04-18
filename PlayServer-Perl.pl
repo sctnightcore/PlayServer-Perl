@@ -45,7 +45,7 @@ sub Start {
 	my $hash_data;
 	while () {
 		update_titlebar('[ Count: '.$count.' | Success: '.$success.' | Fail: '.$fail.' | WaitSend: '.$waitsend.' ] BY SCTNIGHTCORE');
-		$anticaptcha->checkbalance();
+		my $balance = $anticaptcha->checkbalance();
 		#Get checksun
 		my $checksum = $playserver->getimg_saveimg();
 		#check if have checksum file 
@@ -90,7 +90,7 @@ sub Start {
 			#sleep 10 sec for back to loop
 			sleep 10;
 		} else {
-			print "\e[1;41;1mCannot Get Checksum from PlayServer\e[0m\n";
+			print "\e[1;41;1m$checksum is undef\e[0m\n";
 			return;
 		}
 	}

@@ -37,12 +37,10 @@ sub getimg_saveimg {
 
 sub send_answer {
 	my ($self, $answer, $checksum) = @_;
-	my $res_send_answer = $self->{ua}->post_form('http://playserver.co/index.php/Vote/ajax_submitpic/'.$self->{server_Url},{
-		'server_id' => $self->{server_ID},
-		'captcha' => $answer,
-		'gameid' => $self->{game_ID},
-		'checksum' => $checksum
-	},{headers => $self->{heads}});
+	my $www = 'http://playserver.co/index.php/Vote/ajax_submitpic/'.$self->{server_Url};
+	my %form_data = ( 'server_id' => $self->{server_ID}, 'captcha' => $answer, 'gameid' => $self->{game_ID}, 'checksum' => $checksum );
+	my %heads = ( headers => $self->{heads} );
+	my $res_send_answer = $self->{ua}->post_form($www, \%form_data, \%heads);
 	if ($res_send_answer->{success}) {
 		my $send_answer_json = $self->{json}->decode($res_send_answer->{content});
 		return $send_answer_json;
