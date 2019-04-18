@@ -37,11 +37,7 @@ sub Start {
 	my $linkserver = paser_PlayServer();
 	my $playserver = PlayServer->new( Server_Url => $linkserver, GameID => $cfg->val( 'Setting', 'GAMEID' ), ServerID => $cfg->val('Setting','SERVERID'));
 	my $anticaptcha = AntiCaptcha->new( anticaptcha_key => $cfg->val('Setting','AntiCaptchakey'));
-	my $startsendagain = 0;
-	my $success = 0;
-	my $fail = 0;
-	my $waitsend = 0;
-	my $count = 0;
+	my ($startsendagain,$success,$fail,$waitsend,$count) = (0,0,0,0,0);
 	my $hash_data;
 	while () {
 		update_titlebar('[ Count: '.$count.' | Success: '.$success.' | Fail: '.$fail.' | WaitSend: '.$waitsend.' ] BY SCTNIGHTCORE');
