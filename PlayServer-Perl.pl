@@ -42,18 +42,18 @@ sub Start {
 		#Get checksun
 		my $checksum = $playserver->getimg_saveimg();
 		#debug 
-		$debug->sendSocket("[Get_Checksum!]:$checksum");
+		$debug->sendSocket("[Get_Checksum!]:$checksum") if ( $cfg->val( 'Setting', 'SocketDebug' ) eq '1');
 		#check if have checksum file 
 		if (defined $checksum) {
 			#get taskID / get answer
 			my ($taskid,$answer) = $anticaptcha->get_taskid_and_answer($checksum);
 			#my $answer = inputfromkeyboard(); #for test ! 
 			#debug
-			$debug->sendSocket("[Get_Answer_TaskId!]: $answer | $taskid");	
+			$debug->sendSocket("[Get_Answer_TaskId!]: $answer | $taskid") if ( $cfg->val( 'Setting', 'GAMEID' ) eq '1');	
 			# remove checksum file
 			File::file_remove($checksum);
 			#debug 
-			$debug->sendSocket("[ADD DATA!]CHECKSUM:$checksum|TASKID:$taskid|ANSWER:$answer");
+			$debug->sendSocket("[ADD DATA!]CHECKSUM:$checksum|TASKID:$taskid|ANSWER:$answer") if ( $cfg->val( 'Setting', 'SocketDebug' ) eq '1');
 			#push checksum / answer to hashdata
 			push (@{$hash_data->{all_data}},{ checksum => $checksum, answer => $answer, taskid => $taskid});
 			#update var
@@ -68,19 +68,19 @@ sub Start {
 				#send answer
 				my $res_playserver = $playserver->send_answer($hash_data->{all_data}->[0]->{answer}, $hash_data->{all_data}->[0]->{checksum});
 				#debug 
-				$debug->sendSocket("[send_Checksum!]:$hash_data->{all_data}->[0]->{checksum} | $hash_data->{all_data}->[0]->{answer}");				
+				$debug->sendSocket("[send_Checksum!]:$hash_data->{all_data}->[0]->{checksum} | $hash_data->{all_data}->[0]->{answer}") if ( $cfg->val( 'Setting', 'SocketDebug' ) eq '1');				
 				#check res playserver
 				#0 = Fail / 1 = Success
 				if ($res_playserver->{'success'}) {
 					print "[\e[1;37m$now_string\e[0m] - [\e[1;42;1mSUCCESS\e[0m] | [\e[1;37mCHECKSUM:\e[0m $hash_data->{all_data}->[0]->{checksum}] | [\e[1;37mANSWER:\e[0m $hash_data->{all_data}->[0]->{answer}]\n";
 					$success += 1;
 					#debug
-					$debug->sendSocket("[send_Checksum_Success!]: $hash_data->{all_data}->[0]->{checksum} | $hash_data->{all_data}->[0]->{answer}");					
+					$debug->sendSocket("[send_Checksum_Success!]: $hash_data->{all_data}->[0]->{checksum} | $hash_data->{all_data}->[0]->{answer}") if ( $cfg->val( 'Setting', 'SocketDebug' ) eq '1');					
 				} else {
 					print "[\e[1;37m$now_string\e[0m] - [\e[1;41;1mFail\e[0m] | [\e[1;37mCHECKSUM:\e[0m $hash_data->{all_data}->[0]->{checksum}] | [\e[1;37mANSWER:\e[0m $hash_data->{all_data}->[0]->{answer}]\n";
 					$fail += 1;
 					#debug
-					$debug->sendSocket("[send_Checksum_Fail!]: $hash_data->{all_data}->[0]->{checksum} | $hash_data->{all_data}->[0]->{answer}");
+					$debug->sendSocket("[send_Checksum_Fail!]: $hash_data->{all_data}->[0]->{checksum} | $hash_data->{all_data}->[0]->{answer}") if ( $cfg->val( 'Setting', 'SocketDebug' ) eq '1');
 					#TODO config auto report 
 					$anticaptcha->report_imgcaptcha($hash_data->{all_data}->[0]->{taskid});
 
