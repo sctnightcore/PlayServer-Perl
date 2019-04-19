@@ -38,7 +38,7 @@ sub Start {
 	$playserver->getserver_link();	
 	while (1) {
 		update_titlebar('[ Count: '.$count.' | Success: '.$success.' | Fail: '.$fail.' | WaitSend: '.$waitsend.' ] BY SCTNIGHTCORE');
-		#my $balance = $anticaptcha->checkbalance();
+		my $balance = $anticaptcha->checkbalance();
 		#Get checksun
 		my $checksum = $playserver->getimg_saveimg();
 		#debug 
