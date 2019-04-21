@@ -86,6 +86,8 @@ sub Start {
 						$anticaptcha->report_imgcaptcha($hash_data->{all_data}->[0]->{taskid});
 
 					}					
+				} else {
+					print "\e[1;41;1m[Cannot get send_Answer JSON from PlayServer.in.th]\e[0m\n";
 				}
 				#next checksum / answer for send next time
 				shift @{$hash_data->{all_data}};
@@ -97,6 +99,8 @@ sub Start {
 			}
 			#sleep 10 sec for back to loop
 			sleep 10;
+		} else {
+			print "\e[1;41;1m[Cannot get Checksum JSON from PlayServer.in.th]\e[0m\n";
 		}
 	}
 }
@@ -130,7 +134,7 @@ sub update_titlebar {
 sub Load_lib {
 	require Config::IniFiles;
 	require HTTP::Tiny;
-	require JSON::XS;
+	require JSON::MaybeXS;
 	require POSIX;
 	require AntiCaptcha;
 	require File;

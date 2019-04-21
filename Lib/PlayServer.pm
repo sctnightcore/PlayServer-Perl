@@ -1,6 +1,6 @@
 package PlayServer;
 use strict;
-use JSON::XS;
+use JSON::MaybeXS;
 use HTTP::Tiny;
 use Data::Dumper;
 use WWW::Mechanize;
@@ -11,7 +11,6 @@ sub new {
     my ($class, %args) = @_;
     my $self = {};
 	$self->{ua} = HTTP::Tiny->new;
-	$self->{json} = JSON::XS->new->allow_nonref;
 	$self->{game_ID} = $args{GameID};
 	$self->{server_ID} = $args{ServerID};
 	$self->{heads} = {'content-type' => 'application/x-www-form-urlencoded', 'Origin' => 'http://playserver.in.th', 'referer' => 'http://playserver.in.th/index.php/Vote/prokud/'.$self->{server_Url}};
@@ -38,12 +37,11 @@ sub getimg_saveimg {
 	my $res_getimg_saveimg = $self->{ua}->request('POST', $www);
 	if ($res_getimg_saveimg->{success}) {
 		if (defined($res_getimg_saveimg->{content})) {
-			my $getimg_saveimg_json = $self->{json}->decode($res_getimg_saveimg->{content});
+			my $getimg_saveimg_json = decode_json($res_getimg_saveimg->{content});
 			my $checksum = $getimg_saveimg_json->{'checksum'};
 			$self->{ua}->mirror('http://playserver.co/index.php/VoteGetImage/'.$checksum, 'img/'.$checksum.'.png' );
-			return $checksum;
+			return $checksum if defined($checksum);
 		} else {
-			print "\e[1;41;1m[Cannot get Checksum JSON from PlayServer.in.th]\e[0m\n";
 			return;
 		}
 	} else {
@@ -60,10 +58,9 @@ sub send_answer {
 	my $res_send_answer = $self->{ua}->post_form($www, $form_data, $heads);
 	if ($res_send_answer->{success}) {
 		if (defined($res_send_answer->{content})) {
-			my $send_answer_json = $self->{json}->decode($res_send_answer->{content});
-			return $send_answer_json;
+			my $send_answer_json = decode_json($res_send_answer->{content});
+			return $send_answer_json if defined($send_answer_json);
 		} else {
-			print "\e[1;41;1m[Cannot get send_Answer JSON from PlayServer.in.th]\e[0m\n";
 			return;
 		}
 	} else {
