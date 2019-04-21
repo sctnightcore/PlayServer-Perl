@@ -65,30 +65,33 @@ sub Start {
 			if (time() >= $startsendagain) {
 				#update var
 				$waitsend -= 1;
-				#send answer
-				my $res_playserver = $playserver->send_answer($hash_data->{all_data}->[0]->{answer}, $hash_data->{all_data}->[0]->{checksum});
 				#debug 
 				$debug->sendSocket("[send_Checksum!]:$hash_data->{all_data}->[0]->{checksum} | $hash_data->{all_data}->[0]->{answer}") if ( $cfg->val( 'Setting', 'SocketDebug' ) eq '1');				
-				#check res playserver
-				#0 = Fail / 1 = Success
-				if ($res_playserver->{'success'}) {
-					print "[\e[1;37m$now_string\e[0m] - [\e[1;42;1mSUCCESS\e[0m] | [\e[1;37mCHECKSUM:\e[0m $hash_data->{all_data}->[0]->{checksum}] | [\e[1;37mANSWER:\e[0m $hash_data->{all_data}->[0]->{answer}]\n";
-					$success += 1;
-					#debug
-					$debug->sendSocket("[send_Checksum_Success!]: $hash_data->{all_data}->[0]->{checksum} | $hash_data->{all_data}->[0]->{answer}") if ( $cfg->val( 'Setting', 'SocketDebug' ) eq '1');					
-				} else {
-					print "[\e[1;37m$now_string\e[0m] - [\e[1;41;1mFail\e[0m] | [\e[1;37mCHECKSUM:\e[0m $hash_data->{all_data}->[0]->{checksum}] | [\e[1;37mANSWER:\e[0m $hash_data->{all_data}->[0]->{answer}]\n";
-					$fail += 1;
-					#debug
-					$debug->sendSocket("[send_Checksum_Fail!]: $hash_data->{all_data}->[0]->{checksum} | $hash_data->{all_data}->[0]->{answer}") if ( $cfg->val( 'Setting', 'SocketDebug' ) eq '1');
-					#TODO config auto report 
-					$anticaptcha->report_imgcaptcha($hash_data->{all_data}->[0]->{taskid});
+				#send answer
+				my $res_playserver = $playserver->send_answer($hash_data->{all_data}->[0]->{answer}, $hash_data->{all_data}->[0]->{checksum});
+				if (defined($res_playserver)) {
+					#check res playserver
+					#0 = Fail / 1 = Success
+					if ($res_playserver->{'success'}) {
+						print "[\e[1;37m$now_string\e[0m] - [\e[1;42;1mSUCCESS\e[0m] | [\e[1;37mCHECKSUM:\e[0m $hash_data->{all_data}->[0]->{checksum}] | [\e[1;37mANSWER:\e[0m $hash_data->{all_data}->[0]->{answer}]\n";
+						$success += 1;
+						#debug
+						$debug->sendSocket("[send_Checksum_Success!]: $hash_data->{all_data}->[0]->{checksum} | $hash_data->{all_data}->[0]->{answer}") if ( $cfg->val( 'Setting', 'SocketDebug' ) eq '1');					
+					} else {
+						print "[\e[1;37m$now_string\e[0m] - [\e[1;41;1mFail\e[0m] | [\e[1;37mCHECKSUM:\e[0m $hash_data->{all_data}->[0]->{checksum}] | [\e[1;37mANSWER:\e[0m $hash_data->{all_data}->[0]->{answer}]\n";
+						$fail += 1;
+						#debug
+						$debug->sendSocket("[send_Checksum_Fail!]: $hash_data->{all_data}->[0]->{checksum} | $hash_data->{all_data}->[0]->{answer}") if ( $cfg->val( 'Setting', 'SocketDebug' ) eq '1');
+						#TODO config auto report 
+						$anticaptcha->report_imgcaptcha($hash_data->{all_data}->[0]->{taskid});
 
+					}					
 				}
 				#next checksum / answer for send next time
 				shift @{$hash_data->{all_data}};
 				#update var time for send again 
-				$startsendagain = time() + $res_playserver->{'wait'} + 1;
+				my $sleep = defined($res_playserver->{'wait'}) ? $res_playserver->{'wait'} : 61;
+				$startsendagain = time() + $sleep + 1;
 				#update process title
 				update_titlebar('[ Count: '.$count.' | Success: '.$success.' | Fail: '.$fail.' | WaitSend: '.$waitsend.' ] BY SCTNIGHTCORE');
 			}

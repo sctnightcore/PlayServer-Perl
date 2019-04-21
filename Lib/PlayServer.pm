@@ -37,12 +37,17 @@ sub getimg_saveimg {
 	my $www = 'http://playserver.co/index.php/Vote/ajax_getpic/'.$self->{server_Url};
 	my $res_getimg_saveimg = $self->{ua}->request('POST', $www);
 	if ($res_getimg_saveimg->{success}) {
-		my $getimg_saveimg_json = $self->{json}->decode($res_getimg_saveimg->{content});
-		my $checksum = $getimg_saveimg_json->{'checksum'};
-		$self->{ua}->mirror('http://playserver.co/index.php/VoteGetImage/'.$checksum, 'img/'.$checksum.'.png' );
-		return $checksum;
+		if (defined($res_getimg_saveimg->{content})) {
+			my $getimg_saveimg_json = $self->{json}->decode($res_getimg_saveimg->{content});
+			my $checksum = $getimg_saveimg_json->{'checksum'};
+			$self->{ua}->mirror('http://playserver.co/index.php/VoteGetImage/'.$checksum, 'img/'.$checksum.'.png' );
+			return $checksum;
+		} else {
+			print "\e[1;41;1m[Cannot get Checksum JSON from PlayServer.in.th]\e[0m\n";
+			return;
+		}
 	} else {
-		print "\e[1;41;1m[Cannot Get Checksum from PlayServer.in.th]\e[0m\n";
+		print "\e[1;41;1m[Cannot connect for Get Checksum]\e[0m\n";
 		return;
 	}
 }
@@ -54,10 +59,15 @@ sub send_answer {
 	my $heads = { headers => $self->{heads} };
 	my $res_send_answer = $self->{ua}->post_form($www, $form_data, $heads);
 	if ($res_send_answer->{success}) {
-		my $send_answer_json = $self->{json}->decode($res_send_answer->{content});
-		return $send_answer_json;
+		if (defined($res_send_answer->{content})) {
+			my $send_answer_json = $self->{json}->decode($res_send_answer->{content});
+			return $send_answer_json;
+		} else {
+			print "\e[1;41;1m[Cannot get send_Answer JSON from PlayServer.in.th]\e[0m\n";
+			return;
+		}
 	} else {
-		print "\e[1;41;1m[Cannot Send Answer to PlayServer.in.th]\e[0m\n";
+		print "\e[1;41;1m[Cannot connect for Send Answer]\e[0m\n";
 		return;
 	}
 }
