@@ -1,6 +1,6 @@
 package PlayServer;
 use strict;
-use JSON::MaybeXS;
+use JSON::XS;
 use HTTP::Tiny;
 use Data::Dumper;
 use WWW::Mechanize;
@@ -46,6 +46,25 @@ sub getimg_saveimg {
 		}
 	} else {
 		print "\e[1;41;1m[Cannot connect for Get Checksum]\e[0m\n";
+		return;
+	}
+}
+
+sub get_point {
+	my ($self) = @_;
+	my $www = 'https://playserver.in.th/index.php/Server/ajax_checkpoint/'.$self->{server_ID};
+	my $form_data = { gameid => $self->{game_ID} };
+	my $res_get_point = $self->{ua}->post_form($www, $form_data);
+	if ($res_get_point->{success}) {
+		if (defined($res_get_point->{content})) {
+			my $getpoint_json = decode_json($res_get_point->{content});
+			my $point = $getpoint_json->{'point'};
+			return $point if defined($point);
+		} else {
+			return;
+		}
+	} else {
+		print "\e[1;41;1m[Cannot connect for Get Point]\e[0m\n";
 		return;
 	}
 }

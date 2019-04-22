@@ -16,7 +16,7 @@ sub sendSocket {
 	my $socket = new IO::Socket::INET (
 	    PeerHost => '127.0.0.1',
 	    PeerPort => '7777',
-	    Proto => 'tcp',
+	    Proto => 'tcp'
 	);
 	die "cannot connect to the server $!\n" unless $socket;
 	$socket->send($msg);

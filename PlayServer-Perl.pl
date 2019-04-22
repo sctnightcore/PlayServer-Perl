@@ -1,11 +1,7 @@
 use strict;
-use warnings;
 use Config::IniFiles;
-use JSON::XS;
-use Data::Dumper;
 use Win32::Console::ANSI;
 use Win32::Console;
-use WWW::Mechanize;
 use POSIX;
 use FindBin qw( $RealBin );
 use lib "$RealBin/Lib";
@@ -134,7 +130,7 @@ sub update_titlebar {
 sub Load_lib {
 	require Config::IniFiles;
 	require HTTP::Tiny;
-	require JSON::MaybeXS;
+	require JSON::XS;
 	require POSIX;
 	require AntiCaptcha;
 	require File;
