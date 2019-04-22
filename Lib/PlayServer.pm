@@ -36,14 +36,11 @@ sub getimg_saveimg {
 	my $www = 'http://playserver.co/index.php/Vote/ajax_getpic/'.$self->{server_Url};
 	my $res_getimg_saveimg = $self->{ua}->request('POST', $www);
 	if ($res_getimg_saveimg->{success}) {
-		if (defined($res_getimg_saveimg->{content})) {
-			my $getimg_saveimg_json = decode_json($res_getimg_saveimg->{content});
-			my $checksum = $getimg_saveimg_json->{'checksum'};
-			$self->{ua}->mirror('http://playserver.co/index.php/VoteGetImage/'.$checksum, 'img/'.$checksum.'.png' );
-			return $checksum if defined($checksum);
-		} else {
-			return;
-		}
+		return if ($res_getimg_saveimg->{content} eq '');
+		my $getimg_saveimg_json = decode_json($res_getimg_saveimg->{content});
+		my $checksum = $getimg_saveimg_json->{'checksum'};
+		$self->{ua}->mirror('http://playserver.co/index.php/VoteGetImage/'.$checksum, 'img/'.$checksum.'.png' );
+		return $checksum if defined($checksum);
 	} else {
 		print "\e[1;41;1m[Cannot connect for Get Checksum]\e[0m\n";
 		return;
@@ -56,13 +53,10 @@ sub get_point {
 	my $form_data = { gameid => $self->{game_ID} };
 	my $res_get_point = $self->{ua}->post_form($www, $form_data);
 	if ($res_get_point->{success}) {
-		if (defined($res_get_point->{content})) {
-			my $getpoint_json = decode_json($res_get_point->{content});
-			my $point = $getpoint_json->{'point'};
-			return $point if defined($point);
-		} else {
-			return;
-		}
+		return if ($res_get_point->{content} eq '');
+		my $getpoint_json = decode_json($res_get_point->{content});
+		my $point = $getpoint_json->{'point'};
+		return $point if defined($point);
 	} else {
 		print "\e[1;41;1m[Cannot connect for Get Point]\e[0m\n";
 		return;
@@ -76,12 +70,9 @@ sub send_answer {
 	my $heads = { headers => $self->{heads} };
 	my $res_send_answer = $self->{ua}->post_form($www, $form_data, $heads);
 	if ($res_send_answer->{success}) {
-		if (defined($res_send_answer->{content})) {
-			my $send_answer_json = decode_json($res_send_answer->{content});
-			return $send_answer_json if defined($send_answer_json);
-		} else {
-			return;
-		}
+		return if ($res_send_answer->{content} eq '');
+		my $send_answer_json = decode_json($res_send_answer->{content});
+		return $send_answer_json if defined($send_answer_json);
 	} else {
 		print "\e[1;41;1m[Cannot connect for Send Answer]\e[0m\n";
 		return;
