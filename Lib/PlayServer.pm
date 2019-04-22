@@ -24,11 +24,10 @@ sub getserver_link {
 	$mech->get( 'https://playserver.in.th/index.php/Server/'.$self->{server_ID});
 	my @links = $mech->find_all_links(url_regex => qr/prokud\.*/);
 	for my $link ( @links ) {
-		my $url = $link->url;
-		my @result = split '/', $url;
-		$k = uri_encode($result[6]);
+		$k = $link->url;
 	}
-	$self->{server_Url} = $k;
+	my @result = split '/', $k;
+	$self->{server_Url} = uri_encode($result[6]);
 }
 
 sub getimg_saveimg {

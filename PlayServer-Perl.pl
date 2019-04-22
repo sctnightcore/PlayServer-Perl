@@ -84,6 +84,7 @@ sub Start {
 					}					
 				} else {
 					print "\e[1;41;1m[Cannot get send_Answer JSON from PlayServer.in.th]\e[0m\n";
+					redo;
 				}
 				#next checksum / answer for send next time
 				shift @{$hash_data->{all_data}};
@@ -97,6 +98,7 @@ sub Start {
 			sleep 10;
 		} else {
 			print "\e[1;41;1m[Cannot get Checksum JSON from PlayServer.in.th]\e[0m\n";
+			redo;
 		}
 	}
 }
