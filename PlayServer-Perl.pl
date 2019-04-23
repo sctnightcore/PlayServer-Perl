@@ -22,11 +22,13 @@ sub Start {
 	print "\e[1;46;1m================================\e[0m\n";
 	File::clear_oldchecksum();
 	my $hash_data;
+	my $dir_saveimg = "$RealBin/img";
+	my $dir_config = "$RealBin/config";
 	my $debug = SocketClient->new();
 	my $now_string = strftime "%H:%M:%S", localtime;
-	my $cfg = Config::IniFiles->new( -file => "$RealBin/config/config.ini" ) or die "Failed to create Config::IniFiles object\n";;
-	my $playserver = PlayServer->new( GameID => $cfg->val( 'Setting', 'GAMEID' ), ServerID => $cfg->val('Setting','SERVERID'), dir_saveimg => $RealBin);
-	my $anticaptcha = AntiCaptcha->new( anticaptcha_key => $cfg->val('Setting','AntiCaptchakey'), dir_readimg => $RealBin);
+	my $cfg = Config::IniFiles->new( -file => "$dir_config/config.ini" ) or die "Failed to create Config::IniFiles object\n";;
+	my $playserver = PlayServer->new( GameID => $cfg->val( 'Setting', 'GAMEID' ), ServerID => $cfg->val('Setting','SERVERID'), dir_saveimg => $dir_saveimg);
+	my $anticaptcha = AntiCaptcha->new( anticaptcha_key => $cfg->val('Setting','AntiCaptchakey'), dir_readimg => $dir_saveimg);
 	my ($startsendagain,$success,$fail,$waitsend,$count) = (0,0,0,0,0);
 	$playserver->getserver_link();	
 	while (1) {

@@ -15,7 +15,7 @@ sub new {
 
 sub get_taskid_and_answer {
 	my ($self,$checksum) = @_;
-	my $taskid = $self->{wa}->upload(file => "$self->{dir_readimg}//img//$checksum.png");
+	my $taskid = $self->{wa}->upload(file => "$self->{dir_readimg}/$checksum.png");
 	unless($taskid) {
       print "\e[1;41;1mError while uploading captcha\e[0m: ", $self->{wa}->errno, " (", $self->{wa}->errstr, ")";
 	}
@@ -23,7 +23,7 @@ sub get_taskid_and_answer {
 	unless($answer) {
       print "\e[1;41;1mError while recognizing captcha\e[0m: ", $self->{wa}->errno, " (", $self->{wa}->errstr, ")";
 	}
-	return ($taskid,$answer);	
+	return ($taskid,$answer) if (defined($taskid) && defined($answer));	
 }
 
 sub checkbalance {

@@ -40,7 +40,7 @@ sub getimg_saveimg {
 		return if ($res_get_img->{content} eq '');
 		my $getimg_saveimg_json = decode_json($res_get_img->{content});
 		my $checksum = $getimg_saveimg_json->{'checksum'};
-		my $res_save_img = $self->{ua}->mirror("http://playserver.co/index.php/VoteGetImage/$checksum", "$self->{dir_saveimg}//img//$checksum.png" );
+		my $res_save_img = $self->{ua}->mirror("http://playserver.co/index.php/VoteGetImage/$checksum", "$self->{dir_saveimg}/$checksum.png" );
 		if ($res_save_img->{success}) {
 			return $checksum;
 		}
