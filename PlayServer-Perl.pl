@@ -25,13 +25,18 @@ sub Start {
 	my $debug = SocketClient->new();
 	my $now_string = strftime "%H:%M:%S", localtime;
 	my $cfg = Config::IniFiles->new( -file => "$RealBin/config/config.ini" ) or die "Failed to create Config::IniFiles object\n";;
-	my $playserver = PlayServer->new( GameID => $cfg->val( 'Setting', 'GAMEID' ), ServerID => $cfg->val('Setting','SERVERID'));
-	my $anticaptcha = AntiCaptcha->new( anticaptcha_key => $cfg->val('Setting','AntiCaptchakey'));
+	my $playserver = PlayServer->new( GameID => $cfg->val( 'Setting', 'GAMEID' ), ServerID => $cfg->val('Setting','SERVERID'), dir_saveimg => $RealBin);
+	my $anticaptcha = AntiCaptcha->new( anticaptcha_key => $cfg->val('Setting','AntiCaptchakey'), dir_readimg => $RealBin);
 	my ($startsendagain,$success,$fail,$waitsend,$count) = (0,0,0,0,0);
 	$playserver->getserver_link();	
 	while (1) {
 		update_titlebar('[ Count: '.$count.' | Success: '.$success.' | Fail: '.$fail.' | WaitSend: '.$waitsend.' ] BY SCTNIGHTCORE');
 		my $balance = $anticaptcha->checkbalance();
+		if ($balance == 0) {
+			print "[\e[1;37m$now_string\e[0m] - \e[1;41;1mAntiCaptcha balance is 0 !\e[0m\n";
+			sleep 5;
+			exit;		
+		}
 		#Get checksun
 		my $checksum = $playserver->getimg_saveimg();
 		#debug 
@@ -76,8 +81,12 @@ sub Start {
 						#debug
 						$debug->sendSocket("[send_Checksum_Fail!]: $hash_data->{all_data}->[0]->{checksum} | $hash_data->{all_data}->[0]->{answer}") if ( $cfg->val( 'Setting', 'SocketDebug' ) eq '1');
 						#TODO config auto report 
-						$anticaptcha->report_imgcaptcha($hash_data->{all_data}->[0]->{taskid});
-
+						my $res_report = $anticaptcha->report_imgcaptcha($hash_data->{all_data}->[0]->{taskid});
+						if (defined($res_report)) {
+							print "[\e[1;37m$now_string\e[0m] - [\e[1;42;1mSUCCESS\e[0m] ReportCaptcha: $taskid\n";
+						} else {
+							print "[\e[1;37m$now_string\e[0m] - [\e[1;41;1mFail\e[0m] ReportCaptcha: $taskid\n";
+						}
 					}					
 				} else {
 					print "\e[1;41;1m[Cannot get send_Answer JSON from PlayServer.in.th]\e[0m\n";

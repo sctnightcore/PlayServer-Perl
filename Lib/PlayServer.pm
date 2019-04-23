@@ -6,6 +6,7 @@ use Data::Dumper;
 use WWW::Mechanize;
 use Win32::Console::ANSI;
 use URI::Encode qw(uri_encode uri_decode);
+use FindBin qw( $RealBin );
 
 sub new {
     my ($class, %args) = @_;
@@ -13,6 +14,7 @@ sub new {
 	$self->{ua} = HTTP::Tiny->new;
 	$self->{game_ID} = $args{GameID};
 	$self->{server_ID} = $args{ServerID};
+	$self->{dir_saveimg} = $args{dir_saveimg};
 	$self->{heads} = {'content-type' => 'application/x-www-form-urlencoded', 'Origin' => 'http://playserver.in.th', 'referer' => 'http://playserver.in.th/index.php/Vote/prokud/'.$self->{server_Url}};
 	return bless $self, $class;
 }
@@ -38,7 +40,7 @@ sub getimg_saveimg {
 		return if ($res_get_img->{content} eq '');
 		my $getimg_saveimg_json = decode_json($res_get_img->{content});
 		my $checksum = $getimg_saveimg_json->{'checksum'};
-		my $res_save_img = $self->{ua}->mirror("http://playserver.co/index.php/VoteGetImage/$checksum", "img//$checksum.png" );
+		my $res_save_img = $self->{ua}->mirror("http://playserver.co/index.php/VoteGetImage/$checksum", "$self->{dir_saveimg}//img//$checksum.png" );
 		if ($res_save_img->{success}) {
 			return $checksum;
 		}
