@@ -24,7 +24,7 @@ sub Start {
 	my $hash_data;
 	my $debug = SocketClient->new();
 	my $now_string = strftime "%H:%M:%S", localtime;
-	my $cfg = Config::IniFiles->new( -file => "config.ini" );
+	my $cfg = Config::IniFiles->new( -file => "$RealBin/config/config.ini" ) or die "Failed to create Config::IniFiles object\n";;
 	my $playserver = PlayServer->new( GameID => $cfg->val( 'Setting', 'GAMEID' ), ServerID => $cfg->val('Setting','SERVERID'));
 	my $anticaptcha = AntiCaptcha->new( anticaptcha_key => $cfg->val('Setting','AntiCaptchakey'));
 	my ($startsendagain,$success,$fail,$waitsend,$count) = (0,0,0,0,0);
