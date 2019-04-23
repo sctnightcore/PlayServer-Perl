@@ -33,13 +33,15 @@ sub getserver_link {
 sub getimg_saveimg {
 	my ($self) = @_;
 	my $www = 'http://playserver.co/index.php/Vote/ajax_getpic/'.$self->{server_Url};
-	my $res_getimg_saveimg = $self->{ua}->request('POST', $www);
-	if ($res_getimg_saveimg->{success}) {
-		return if ($res_getimg_saveimg->{content} eq '');
-		my $getimg_saveimg_json = decode_json($res_getimg_saveimg->{content});
+	my $res_get_img = $self->{ua}->request('POST', $www);
+	if ($res_get_img->{success}) {
+		return if ($res_get_img->{content} eq '');
+		my $getimg_saveimg_json = decode_json($res_get_img->{content});
 		my $checksum = $getimg_saveimg_json->{'checksum'};
-		$self->{ua}->mirror('http://playserver.co/index.php/VoteGetImage/'.$checksum, 'img/'.$checksum.'.png' );
-		return $checksum if defined($checksum);
+		my $res_save_img = $self->{ua}->mirror("http://playserver.co/index.php/VoteGetImage/$checksum", "img//$checksum.png" );
+		if ($res_save_img->{success}) {
+			return $checksum;
+		}
 	} else {
 		print "\e[1;41;1m[Cannot connect for Get Checksum]\e[0m\n";
 		return;
