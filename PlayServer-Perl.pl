@@ -90,6 +90,9 @@ sub Start {
 						}
 						
 =cut					
+						open(WRITE, ">>:utf8", "$RealBin/Log/Fail_Log.txt");
+						print WRITE "[$now_string] - [ $hash_data->{all_data}->[0]->{checksum} | $hash_data->{all_data}->[0]->{taskid} ]\n";
+						close(WRITE);
 					}				
 				} else {
 					print "\e[1;41;1m[Cannot get send_Answer JSON from PlayServer.in.th]\e[0m\n";
