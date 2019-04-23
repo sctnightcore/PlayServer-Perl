@@ -80,6 +80,7 @@ sub Start {
 						$fail += 1;
 						#debug
 						$debug->sendSocket("[send_Checksum_Fail!]: $hash_data->{all_data}->[0]->{checksum} | $hash_data->{all_data}->[0]->{answer}") if ( $cfg->val( 'Setting', 'SocketDebug' ) eq '1');
+=put						
 						#TODO config auto report 
 						my $res_report = $anticaptcha->report_imgcaptcha($hash_data->{all_data}->[0]->{taskid});
 						if (defined($res_report)) {
@@ -87,7 +88,9 @@ sub Start {
 						} else {
 							print "[\e[1;37m$now_string\e[0m] - [\e[1;41;1mFail\e[0m] ReportCaptcha: $taskid\n";
 						}
-					}					
+						
+=cut					
+					}				
 				} else {
 					print "\e[1;41;1m[Cannot get send_Answer JSON from PlayServer.in.th]\e[0m\n";
 					redo;
