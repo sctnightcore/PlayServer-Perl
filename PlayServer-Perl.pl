@@ -9,11 +9,7 @@ use AntiCaptcha;
 use File;
 use PlayServer;
 use SocketClient;
-my $cfg = Config::IniFiles->new( -file => "config.ini" );
-my ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime();
-my $now_string = strftime "%H:%M:%S", localtime;
 #start ! 
-$|++;
 Start();
 
 sub Start {
@@ -25,9 +21,10 @@ sub Start {
 	print "\e[1;37mgithub.com/sctnightcore\e[0m\n";
 	print "\e[1;46;1m================================\e[0m\n";
 	File::clear_oldchecksum();
-	check_config();
 	my $hash_data;
 	my $debug = SocketClient->new();
+	my $now_string = strftime "%H:%M:%S", localtime;
+	my $cfg = Config::IniFiles->new( -file => "config.ini" );
 	my $playserver = PlayServer->new( GameID => $cfg->val( 'Setting', 'GAMEID' ), ServerID => $cfg->val('Setting','SERVERID'));
 	my $anticaptcha = AntiCaptcha->new( anticaptcha_key => $cfg->val('Setting','AntiCaptchakey'));
 	my ($startsendagain,$success,$fail,$waitsend,$count) = (0,0,0,0,0);
@@ -100,17 +97,6 @@ sub Start {
 			print "\e[1;41;1m[Cannot get Checksum JSON from PlayServer.in.th]\e[0m\n";
 			redo;
 		}
-	}
-}
-
-sub check_config {
-	my $antikey = $cfg->val('Setting','AntiCaptchakey');
-	my $gameid = $cfg->val( 'Setting', 'GAMEID' );
-	my $serverid = $cfg->val('Setting','SERVERID');
-	if ( ( $antikey eq '' ) || ( $gameid eq '' ) || ( $serverid eq '') ) {
-		print "\e[1;41;1m[Recheck config.ini]!\e[0m\n";
-		sleep 10;
-		exit;
 	}
 }
 

@@ -8,7 +8,6 @@ sub new {
     my ($class, %args) = @_;
     my $self = {};
 	$self->{wa} = WebService::Antigate->new(key => $args{anticaptcha_key});
-
 	return bless $self, $class;
 }
 
