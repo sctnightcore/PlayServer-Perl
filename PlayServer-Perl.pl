@@ -77,6 +77,9 @@ sub Start {
 						$success += 1;
 						#debug
 						$debug->sendSocket("[send_Checksum_Success!]: $hash_data->{all_data}->[0]->{checksum} | $hash_data->{all_data}->[0]->{answer}") if ( $cfg->val( 'Setting', 'SocketDebug' ) eq '1');					
+						open(WRITE, ">>:utf8", "$RealBin/Log/Success_Log.txt");
+						print WRITE "[$now_string] - [ $hash_data->{all_data}->[0]->{checksum} | $hash_data->{all_data}->[0]->{taskid} ]\n";
+						close(WRITE);
 					} else {
 						print "[\e[1;37m$now_string\e[0m] - [\e[1;41;1mFail\e[0m] | [\e[1;37mCHECKSUM:\e[0m $hash_data->{all_data}->[0]->{checksum}] | [\e[1;37mANSWER:\e[0m $hash_data->{all_data}->[0]->{answer}]\n";
 						$fail += 1;
