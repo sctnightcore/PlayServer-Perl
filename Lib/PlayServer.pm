@@ -9,8 +9,8 @@ use URI::Encode qw(uri_encode uri_decode);
 use FindBin qw( $RealBin );
 
 sub new {
-    my ($class, %args) = @_;
-    my $self = {};
+	my ($class, %args) = @_;
+	my $self = {};
 	$self->{ua} = HTTP::Tiny->new;
 	$self->{game_ID} = $args{GameID};
 	$self->{server_ID} = $args{ServerID};
