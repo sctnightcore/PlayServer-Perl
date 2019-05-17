@@ -6,7 +6,6 @@ use Data::Dumper;
 use WWW::Mechanize;
 use Win32::Console::ANSI;
 use URI::Encode qw(uri_encode uri_decode);
-use FindBin qw( $RealBin );
 
 sub new {
 	my ($class, %args) = @_;
@@ -67,7 +66,7 @@ sub get_point {
 }
 
 sub send_answer {
-	my ($self, $answer, $checksum) = @_;
+	my ($self, $answer, $checksum,$now_string) = @_;
 	my $www = 'http://playserver.co/index.php/Vote/ajax_submitpic/'.$self->{server_Url};
 	my $form_data = { 'server_id' => $self->{server_ID}, 'captcha' => $answer, 'gameid' => $self->{game_ID}, 'checksum' => $checksum };
 	my $heads = { headers => $self->{heads} };
@@ -75,6 +74,11 @@ sub send_answer {
 	if ($res_send_answer->{success}) {
 		return if ($res_send_answer->{content} eq '');
 		my $send_answer_json = decode_json($res_send_answer->{content});
+		if ($send_answer_json->{'success'}) {
+			print "[\e[1;37m$now_string\e[0m] - [\e[1;42;1mSUCCESS\e[0m] | [\e[1;37mCHECKSUM:\e[0m $checksum] | [\e[1;37mANSWER:\e[0m $answer]\n";
+		} else {
+			print "[\e[1;37m$now_string\e[0m] - [\e[1;41;1mFail\e[0m] | [\e[1;37mCHECKSUM:\e[0m $checksum] | [\e[1;37mANSWER:\e[0m $answer]\n";
+		}
 		return $send_answer_json if defined($send_answer_json);
 	} else {
 		print "\e[1;41;1m[Cannot connect for Send Answer]\e[0m\n";

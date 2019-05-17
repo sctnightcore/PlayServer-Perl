@@ -27,8 +27,13 @@ sub get_taskid_and_answer {
 }
 
 sub checkbalance {
-	my ($self) = @_;
+	my ($self,$time) = @_;
 	my $balance = $self->{wa}->balance();
+	if ($balance == 0) {
+		print "[\e[1;37m$time\e[0m] - \e[1;41;1mAntiCaptcha balance is 0 !\e[0m\n";
+		sleep 5;
+		exit;
+	}
 	return $balance if defined($balance);
 }
 
