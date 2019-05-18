@@ -9,7 +9,6 @@ use AntiCaptcha;
 use File;
 
 use PlayServer;
-use SocketClient;
 #start ! 
 Start();
 
@@ -58,7 +57,8 @@ sub Start {
 				close(WRITE);
 			}
 			shift @{$hash_data};
-			$startsendagain = time() + 61;
+			my $time = $res->{'wait'} ? $res->{'wait'} : 61;
+			$startsendagain = time() + $time;
 			update_titlebar($success,$fail,$waitsend);
 		}
 	}
@@ -86,7 +86,6 @@ sub Load_lib {
 	require AntiCaptcha;
 	require File;
 	require PlayServer;
-	require SocketClient;
 	require WWW::Mechanize;
 	require WebService::Antigate;
 	require Term::ANSIColor;
