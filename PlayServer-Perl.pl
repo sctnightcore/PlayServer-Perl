@@ -2,6 +2,7 @@ use strict;
 use Config::IniFiles;
 use Win32::Console::ANSI;
 use Win32::Console;
+use Data::Dumper;
 use POSIX;
 use FindBin qw( $RealBin );
 use lib "$RealBin/Lib";
@@ -19,7 +20,6 @@ sub Start {
 	print "\e[1;37mgithub.com/sctnightcore\e[0m\n";
 	print "\e[1;46;1m================================\e[0m\n";
 	my ($startsendagain,$success,$fail,$waitsend) = (0,0,0,0,0);
-	update_titlebar($success,$fail,$waitsend);
 	my $hash_data;
 	my $dir_saveimg = "$RealBin/img";
 	my $dir_config = "$RealBin/config";
@@ -27,23 +27,26 @@ sub Start {
 	my $playserver = PlayServer->new( GameID => $cfg->val( 'Setting', 'GAMEID' ), ServerID => $cfg->val('Setting','SERVERID'), dir_saveimg => $dir_saveimg);
 	my $anticaptcha = AntiCaptcha->new( anticaptcha_key => $cfg->val('Setting','AntiCaptchakey'), dir_readimg => $dir_saveimg);
 	my $fs = File->new( Path => $dir_saveimg);
+	my $c = Win32::Console->new();
 	$playserver->getserver_link();
 	$fs->clear_oldchecksum();
 	while (1) {
+		my $title = sprintf("[ Success: %-3s | Fail: %-3s | WaitSend: %-3s/12 ]-----[ By SCTNIGHTCORE ]", $success,$fail,$waitsend);
 		my $now_string = strftime("%H:%M:%S", localtime);
 		my $var = CheckVar($waitsend);
-		my $balance = $anticaptcha->checkbalance($now_string);
-		if ($var == 0) {
+		#my $balance = $anticaptcha->checkbalance($now_string);
+		if (defined($var == 0)) {
 			my $checksum = $playserver->getimg_saveimg();
 			my ($taskid,$answer) = $anticaptcha->get_taskid_and_answer($checksum);
 			$waitsend += 1;
+			$c->Title($title);
 			push @{$hash_data},{ checksum => $checksum, answer => $answer, taskid => $taskid };
-			update_titlebar($success,$fail,$waitsend);
 			$fs->file_remove($checksum);
 			sleep 2;
 		}
 		if (time >= $startsendagain) {
 			$waitsend -= 1;
+			$c->Title($title);
 			my $res = $playserver->send_answer($hash_data->[0]->{answer}, $hash_data->[0]->{checksum},$now_string);
 			if ($res->{'success'}) {
 				$success += 1;
@@ -59,24 +62,17 @@ sub Start {
 			shift @{$hash_data};
 			my $time = $res->{'wait'} ? $res->{'wait'} : 61;
 			$startsendagain = time() + $time;
-			update_titlebar($success,$fail,$waitsend);
+			$c->Title($title);
 		}
 	}
 }
 
 sub CheckVar {
 	my ($waitsend) = @_;
-	return 1 if ($waitsend == 12);
+	return 1 if ($waitsend >= 12);
 	return 0 if ($waitsend == 0);	
 }
 
-sub update_titlebar {
-	my ($success,$fail,$waitsend) = @_;
-	if ($^O eq 'MSWin32') {
-		my $c = Win32::Console->new();
-		$c->Title('[ Success: '.$success.' | Fail: '.$fail.' | WaitSend: '.$waitsend.'(12) ] BY SCTNIGHTCORE');
-	}
-}
 
 sub Load_lib {
 	require Config::IniFiles;
