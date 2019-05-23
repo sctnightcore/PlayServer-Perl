@@ -8,8 +8,8 @@ use FindBin qw( $RealBin );
 use lib "$RealBin/Lib";
 use AntiCaptcha;
 use File;
-
 use PlayServer;
+
 sub __start {
 	print "\e[1;46;1m================================\e[0m\n";
 	print "\e[1;37mPlayServer-Perl\e[0m\n";
@@ -33,16 +33,16 @@ sub __start {
 		my $checksum = $playserver->getimg_saveimg();
 		my ($taskid,$answer) = $anticaptcha->get_taskid_and_answer($checksum);
 		$fs->file_remove($checksum);
-		my $res = $playserver->send_answer($hash_data->[0]->{answer}, $hash_data->[0]->{checksum},$now_string);
+		my $res = $playserver->send_answer($answer, $checksum,$now_string);
 		if ($res->{'success'}) {
 			$success += 1;
 			open(WRITE, ">>:utf8", "$RealBin/Log/Success_Log.txt");
-			print WRITE "[$now_string] - [ $hash_data->[0]->{checksum} | $hash_data->[0]->{taskid} ]\n";
+			print WRITE "[$now_string] - [ $checksum | $taskid | $answer ]\n";
 			close(WRITE);		
 		} else {
 			$fail += 1;
 			open(WRITE, ">>:utf8", "$RealBin/Log/Fail_Log.txt");
-			print WRITE "[$now_string] - [ $hash_data->[0]->{checksum} | $hash_data->[0]->{taskid} ]\n";
+			print WRITE "[$now_string] - [ $checksum | $taskid | $answer ]\n";
 			close(WRITE);
 		}
 		$c->Title($title);
@@ -51,4 +51,5 @@ sub __start {
 }
 
 
+__start() if (! $^0 eq 'MSWin32');
 1;
