@@ -51,8 +51,8 @@ if (0) {
 	require Win32::Console::ANSI;
 	require Win32::Console;
 	require URI::Encode;
-	require FindBin;
 	require Data::Dumper;
+	require Dir::Self;
 }
 
 $0 = PerlApp::exe() if ($PerlApp::TOOL eq "PerlApp");
