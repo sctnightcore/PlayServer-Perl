@@ -50,6 +50,4 @@ sub __start {
 	}
 }
 
-
-__start() if (! $^0 eq 'MSWin32');
 1;
