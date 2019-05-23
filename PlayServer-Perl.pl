@@ -4,25 +4,28 @@ use Win32::Console::ANSI;
 use Win32::Console;
 use Data::Dumper;
 use POSIX;
+use Dir::Self;
 use lib __DIR__."/Lib";
 use AntiCaptcha;
 use File;
 use PlayServer;
 
 sub __start {
+	my $c = Win32::Console->new();
 	print "\e[1;46;1m================================\e[0m\n";
 	print "\e[1;37mPlayServer-Perl\e[0m\n";
 	print "\e[1;37mby sctnightcore\e[0m\n";
 	print "\e[1;37mgithub.com/sctnightcore\e[0m\n";
 	print "\e[1;46;1m================================\e[0m\n";
 	my ($success,$fail) = (0,0);
-	my $dir_saveimg = __DIR__."/img";
-	my $dir_config = __DIR__."/config";
+	my $dir_saveimg = __DIR__."/Img";
+	my $dir_config = __DIR__."/Config";
+	my $dir_log = __DIR__."/Log";
+	$c->Title("PlayServer Vote by sctnightcore");
 	my $cfg = Config::IniFiles->new( -file => "$dir_config/config.ini" ) or die "Failed to create Config::IniFiles object\n";;
 	my $playserver = PlayServer->new( GameID => $cfg->val( 'Setting', 'GAMEID' ), ServerID => $cfg->val('Setting','SERVERID'), dir_saveimg => $dir_saveimg);
 	my $anticaptcha = AntiCaptcha->new( anticaptcha_key => $cfg->val('Setting','AntiCaptchakey'), dir_readimg => $dir_saveimg);
 	my $fs = File->new( Path => $dir_saveimg);
-	my $c = Win32::Console->new();
 	$playserver->getserver_link();
 	$fs->clear_oldchecksum();
 	while (1) {
@@ -35,12 +38,12 @@ sub __start {
 		my $res = $playserver->send_answer($answer, $checksum,$now_string);
 		if ($res->{'success'}) {
 			$success += 1;
-			open(WRITE, ">>:utf8", "$RealBin/Log/Success_Log.txt");
+			open(WRITE, ">>:utf8", "$dir_log/Log/Success_Log.txt");
 			print WRITE "[$now_string] - [ $checksum | $taskid | $answer ]\n";
 			close(WRITE);		
 		} else {
 			$fail += 1;
-			open(WRITE, ">>:utf8", "$RealBin/Log/Fail_Log.txt");
+			open(WRITE, ">>:utf8", "$dir_log/Log/Fail_Log.txt");
 			print WRITE "[$now_string] - [ $checksum | $taskid | $answer ]\n";
 			close(WRITE);
 		}
