@@ -50,4 +50,6 @@ sub __start {
 	}
 }
 
+ __start() unless defined $ENV{INTERPRETER};
+
 1;
