@@ -10,17 +10,13 @@ use AntiCaptcha;
 use File;
 
 use PlayServer;
-#start ! 
-Start();
-
-sub Start {
+sub __start {
 	print "\e[1;46;1m================================\e[0m\n";
 	print "\e[1;37mPlayServer-Perl\e[0m\n";
 	print "\e[1;37mby sctnightcore\e[0m\n";
 	print "\e[1;37mgithub.com/sctnightcore\e[0m\n";
 	print "\e[1;46;1m================================\e[0m\n";
-	my ($startsendagain,$success,$fail,$waitsend) = (0,0,0,0,0);
-	my $hash_data;
+	my ($success,$fail) = (0,0);
 	my $dir_saveimg = "$RealBin/img";
 	my $dir_config = "$RealBin/config";
 	my $cfg = Config::IniFiles->new( -file => "$dir_config/config.ini" ) or die "Failed to create Config::IniFiles object\n";;
@@ -31,65 +27,28 @@ sub Start {
 	$playserver->getserver_link();
 	$fs->clear_oldchecksum();
 	while (1) {
-		my $title = sprintf("[ Success: %-3s | Fail: %-3s | WaitSend: %-3s/12 ]-----[ By SCTNIGHTCORE ]", $success,$fail,$waitsend);
+		my $title = sprintf("[ Success: %-3s | Fail: %-3s ]-----[ By SCTNIGHTCORE ]", $success,$fail);
 		my $now_string = strftime("%H:%M:%S", localtime);
-		my $var = CheckVar($waitsend);
-		#my $balance = $anticaptcha->checkbalance($now_string);
-		if (defined($var == 0)) {
-			my $checksum = $playserver->getimg_saveimg();
-			my ($taskid,$answer) = $anticaptcha->get_taskid_and_answer($checksum);
-			$waitsend += 1;
-			$c->Title($title);
-			push @{$hash_data},{ checksum => $checksum, answer => $answer, taskid => $taskid };
-			$fs->file_remove($checksum);
-			sleep 2;
+		my $balance = $anticaptcha->checkbalance($now_string);
+		my $checksum = $playserver->getimg_saveimg();
+		my ($taskid,$answer) = $anticaptcha->get_taskid_and_answer($checksum);
+		$fs->file_remove($checksum);
+		my $res = $playserver->send_answer($hash_data->[0]->{answer}, $hash_data->[0]->{checksum},$now_string);
+		if ($res->{'success'}) {
+			$success += 1;
+			open(WRITE, ">>:utf8", "$RealBin/Log/Success_Log.txt");
+			print WRITE "[$now_string] - [ $hash_data->[0]->{checksum} | $hash_data->[0]->{taskid} ]\n";
+			close(WRITE);		
+		} else {
+			$fail += 1;
+			open(WRITE, ">>:utf8", "$RealBin/Log/Fail_Log.txt");
+			print WRITE "[$now_string] - [ $hash_data->[0]->{checksum} | $hash_data->[0]->{taskid} ]\n";
+			close(WRITE);
 		}
-		if (time >= $startsendagain) {
-			$waitsend -= 1;
-			$c->Title($title);
-			my $res = $playserver->send_answer($hash_data->[0]->{answer}, $hash_data->[0]->{checksum},$now_string);
-			if ($res->{'success'}) {
-				$success += 1;
-				open(WRITE, ">>:utf8", "$RealBin/Log/Success_Log.txt");
-				print WRITE "[$now_string] - [ $hash_data->[0]->{checksum} | $hash_data->[0]->{taskid} ]\n";
-				close(WRITE);		
-			} else {
-				$fail += 1;
-				open(WRITE, ">>:utf8", "$RealBin/Log/Fail_Log.txt");
-				print WRITE "[$now_string] - [ $hash_data->[0]->{checksum} | $hash_data->[0]->{taskid} ]\n";
-				close(WRITE);
-			}
-			shift @{$hash_data};
-			my $time = $res->{'wait'} ? $res->{'wait'} : 61;
-			$startsendagain = time() + $time;
-			$c->Title($title);
-		}
+		$c->Title($title);
+		sleep($res->{'wait'})
 	}
 }
 
-sub CheckVar {
-	my ($waitsend) = @_;
-	return 1 if ($waitsend >= 12);
-	return 0 if ($waitsend == 0);	
-}
-
-
-sub Load_lib {
-	require Config::IniFiles;
-	require HTTP::Tiny;
-	require JSON::XS;
-	require POSIX;
-	require AntiCaptcha;
-	require File;
-	require PlayServer;
-	require WWW::Mechanize;
-	require WebService::Antigate;
-	require Term::ANSIColor;
-	if ($^O eq 'MSWin32') {
-		require Win32::Console::ANSI;
-		require Win32::Console;
-	}
-	require URI::Encode;
-}
 
 1;
