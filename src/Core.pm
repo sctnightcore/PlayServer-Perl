@@ -24,7 +24,7 @@ sub Core_Logic {
 		my $title = sprintf("[ Success: %3s | Fail: %3s ]-----[ By SCTNIGHTCORE ]", $success_count,$fail_count);
 		$us->update_Title($title);
 		my $balance = $ac->get_Balance();
-		my $img_ps = $ps->get_image();
+		my $img_ps = $ps->get_Image();
 		my $task_id = $ac->get_Task($img_ps->{base64});
 		my $task_res = $ac->get_Answer($task_id);
 		my $res_ps = $ps->send_image($task_res->{answer}, $img_ps->{checksum});
