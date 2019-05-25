@@ -22,7 +22,7 @@ sub get_Task {
 
 sub get_Answer {
 	my ($self, $taskid) = @_;
-	for my $i (rand(60)) {
+	foreach (0..60) {
 		my $res = $self->{ac}->getTaskResult($taskid) or die $self->{ac}->errstr;
 		if ($res->{status} ne 'processing') {
 			return ({
