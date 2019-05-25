@@ -26,6 +26,8 @@ sub get_Answer {
 				answer => $res->{solution}->{text},
 				cost => $res->{cost}
 			});	
+		} else {
+			sleep(5);
 		}
 	}
 }

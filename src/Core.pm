@@ -21,19 +21,19 @@ sub Core_Logic {
 	my $report_count_success = 0;
 	my $report_count_fail = 0;
 	while (1) {
-		my $title = sprintf("[ Success: %3s | Fail: %3s ]-----[ By SCTNIGHTCORE ]", $success_count,$fail_count);
+		my $title = sprintf("[ Success: %3s | Fail: %3s ]-----[ By SCTNIGHTCORE ]", $success_count, $fail_count);
 		$us->update_Title($title);
 		my $balance = $ac->get_Balance();
 		my $img_ps = $ps->get_Image();
 		my $task_id = $ac->get_Task($img_ps->{base64});
 		my $task_res = $ac->get_Answer($task_id);
-		my $res_ps = $ps->send_image($task_res->{answer}, $img_ps->{checksum});
+		my $res_ps = $ps->send_Image($task_res->{answer}, $img_ps->{checksum});
 		my $time = strftime('%Y-%m-%d',localtime);
 		if ($res_ps->{success}) {
 			$success += 1;
-			printf("[\e[1;37m%s\e[0m] - [\e[1;42;1m%s\e[0m] - [CHECKSUM:%s] - [ANSWER:%s]\n",$time,'SUCCESS',$img_ps->{checksum},$task_res->{answer});
+			printf("[\e[1;37m%s\e[0m] - [\e[1;42;1m%s\e[0m] - [CHECKSUM:%s] - [ANSWER:%s]\n", $time, 'SUCCESS', $img_ps->{checksum}, $task_res->{answer});
 		} else {
-			printf("[\e[1;37m%s\e[0m] - [\e[1;41;1m%s\e[0m] - [CHECKSUM:%s] - [ANSWER:%s]\n",$time,'FAIL',$img_ps->{checksum},$task_res->{answer});
+			printf("[\e[1;37m%s\e[0m] - [\e[1;41;1m%s\e[0m] - [CHECKSUM:%s] - [ANSWER:%s]\n", $time, 'FAIL', $img_ps->{checksum}, $task_res->{answer});
 			$fail += 1;
 			my $report = $ac->report_Taskid($task_id);
 			if ($report->{status} eq 'success' && $report->{errorId} == 0) {
