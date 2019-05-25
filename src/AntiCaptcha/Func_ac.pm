@@ -13,10 +13,7 @@ sub new {
 
 sub get_Task {
 	my ($self, $img) = @_;
-	my $res = $self->{ac}->createTask({
-		type => 'ImageToTextTask',
-		body => $img
-	}) or die $self->{ac}->errstr;
+	my $res = $self->{ac}->createTask({ type => 'ImageToTextTask', body => $img }) or die $self->{ac}->errstr;
 	return $res->{taskId};
 }
 
@@ -37,6 +34,7 @@ sub get_Balance {
 	my ($self) = @_;
 	my $res = $self->{ac}->getBalance() or die $self->{ac}->errstr;
 	if ($res->{balance} == 0 ) {
+		print "Balance is 0\n";
 		sleep 10;
 		exit;
 	}

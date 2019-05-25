@@ -23,6 +23,7 @@ sub Core_Logic {
 	while (1) {
 		my $title = sprintf("[ Success: %3s | Fail: %3s ]-----[ By SCTNIGHTCORE ]", $success_count,$fail_count);
 		$us->update_Title($title);
+		my $balance = $ac->get_Balance();
 		my $img_ps = $ps->get_image();
 		my $task_id = $ac->get_Task($img_ps->{base64});
 		my $task_res = $ac->get_Answer($task_id);
