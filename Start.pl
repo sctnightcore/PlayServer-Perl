@@ -1,4 +1,5 @@
 use Dir::Self;
+use strict;
 use lib __DIR__ . "/src";
 use Core;
 
