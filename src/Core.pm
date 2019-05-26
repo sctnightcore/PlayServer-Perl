@@ -14,7 +14,7 @@ sub Core_Logic {
 	my ($path) = @_;
 	my $cfg = Config::IniFiles->new( -file => "$path/Config/config.ini" ) or die "Failed to create Config::IniFiles object\n";
 	my $ps = PlayServer::Func_ps->new( ServerUrl => $cfg->val('Setting', 'SERVERURL'), ServerID => $cfg->val('Setting', 'SERVERID'), GameID => $cfg->val('Setting', 'GAMEID'));
-	#my $ac = AntiCaptcha::Func_ac->new( AntiKey => $cfg->val('Setting', 'AntiCaptchakey'));
+	my $ac = AntiCaptcha::Func_ac->new( AntiKey => $cfg->val('Setting', 'AntiCaptchakey'));
 	my $us = Utils::Func_us->new();
 	my $success_count = 0;
 	my $fail_count = 0;
