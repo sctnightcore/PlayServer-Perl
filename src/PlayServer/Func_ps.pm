@@ -28,12 +28,18 @@ sub get_Image {
 		my $response_checksum_json = decode_json($response_checksum->decoded_content);
 		my $req_img = GET 'http://playserver.co/index.php/VoteGetImage/'.$response_checksum_json->{'checksum'};
 		my $response_img = $self->{ua}->request($req_img);
-		if ($response_img->is_success) {
+		if ( $response_img->is_success) {
 			return ({
 				checksum => $response_checksum_json->{'checksum'},
 				base64 => encode_base64($response_img->content)
 			});
+		} else {
+			print("[ERROR]: 503 Service Temporarily Unavailable [cannot get img data]\n");
+			return;
 		}
+	} else {
+		print("[ERROR]: 503 Service Temporarily Unavailable [cannot get img json]\n");
+		return;
 	}
 }
 
@@ -46,9 +52,12 @@ sub send_Image {
 		checksum => $checksum
 	];
 	my $response_answer = $self->{ua}->request($req_answer);
-	if ($response_answer->is_success) {
+	if ( $response_answer->is_success ) {
 		my $response_answer_json = decode_json($response_answer->decoded_content);
 		return $response_answer_json;
+	} else {
+		print("[ERROR]: 503 Service Temporarily Unavailable [cannot send answer]\n");
+		return;
 	}
 }
 1;
