@@ -28,11 +28,12 @@ sub Core_Logic {
 		my $task_id = $ac->get_Task($img_ps->{base64});
 		my $task_res = $ac->get_Answer($task_id);
 		my $res_ps = $ps->send_Image($task_res->{answer}, $img_ps->{checksum});
-		my $time = strftime('%Y-%m-%d',localtime);
 		if ($res_ps->{success}) {
 			$success_count += 1;
+			my $time = strftime('%Y-%m-%d',localtime);
 			printf("[\e[1;37m%s\e[0m] - [\e[1;42;1m%s\e[0m] - [CHECKSUM:%s] - [ANSWER:%s]\n", $time, 'SUCCESS', $img_ps->{checksum}, $task_res->{answer});
 		} else {
+			my $time = strftime('%Y-%m-%d',localtime);
 			printf("[\e[1;37m%s\e[0m] - [\e[1;41;1m%s\e[0m] - [CHECKSUM:%s] - [ANSWER:%s]\n", $time, 'FAIL', $img_ps->{checksum}, $task_res->{answer});
 			$fail_count += 1;
 			my $report = $ac->report_Taskid($task_id);
