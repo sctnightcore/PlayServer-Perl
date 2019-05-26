@@ -30,11 +30,11 @@ sub Core_Logic {
 		my $res_ps = $ps->send_Image($task_res->{answer}, $img_ps->{checksum});
 		my $time = strftime('%Y-%m-%d',localtime);
 		if ($res_ps->{success}) {
-			$success += 1;
+			$success_count += 1;
 			printf("[\e[1;37m%s\e[0m] - [\e[1;42;1m%s\e[0m] - [CHECKSUM:%s] - [ANSWER:%s]\n", $time, 'SUCCESS', $img_ps->{checksum}, $task_res->{answer});
 		} else {
 			printf("[\e[1;37m%s\e[0m] - [\e[1;41;1m%s\e[0m] - [CHECKSUM:%s] - [ANSWER:%s]\n", $time, 'FAIL', $img_ps->{checksum}, $task_res->{answer});
-			$fail += 1;
+			$fail_count += 1;
 			my $report = $ac->report_Taskid($task_id);
 			if ($report->{status} eq 'success' && $report->{errorId} == 0) {
 				printf("[\e[1;37m%s\e[0m] - [\e[1;42;1m%s\e[0m] - [REPORT:%s]\n", $time, 'SUCCESS', $task_id);
