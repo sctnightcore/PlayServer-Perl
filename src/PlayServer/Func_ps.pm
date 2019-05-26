@@ -56,7 +56,7 @@ sub send_Image {
 		my $response_answer_json = decode_json($response_answer->decoded_content);
 		return $response_answer_json;
 	} else {
-		print("[ERROR]: 503 Service Temporarily Unavailable [cannot send answer]\n");
+		print("[ERROR]: 503 Service Temporarily Unavailable [cannot get answer json]\n");
 		return;
 	}
 }
