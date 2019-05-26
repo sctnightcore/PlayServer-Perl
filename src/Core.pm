@@ -48,7 +48,7 @@ sub Core_Logic {
 			}
 		}
 		$us->update_Title($title);
-		sleep($res->{'wait'});
+		sleep($res_ps->{'wait'});
 	}
 }
 
