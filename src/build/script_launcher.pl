@@ -54,6 +54,8 @@ if (0) {
 	require Win32::Console;
 	require POSIX;
 	require Dir::Self;
+	require WWW::Mechanize;
+	require URI::Encode;
 
 }
 
