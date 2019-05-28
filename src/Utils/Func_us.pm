@@ -25,6 +25,4 @@ sub update_score {
 	my $title = sprintf("[ Success: %3s | Fail: %3s ]-----[ By SCTNIGHTCORE ]", $success, $fail);
 	$self->{cs}->Title($title);
 }
-
-
 1;

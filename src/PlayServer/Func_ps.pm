@@ -6,8 +6,6 @@ use HTTP::Headers;
 use LWP::UserAgent;
 use HTTP::Request::Common qw(POST GET);
 use MIME::Base64;
-use WWW::Mechanize;
-use URI::Encode qw(uri_encode uri_decode);
 
 sub new {
 	my ($class, %args) = @_;
@@ -60,21 +58,6 @@ sub send_Image {
 		print("[ERROR]: 503 Service Temporarily Unavailable [cannot get answer json]\n");
 		return;
 	}
-}
-
-
-sub get_Url {
-	my $self = shift;
-	my ($serverid) = @_;
-	my $mech = WWW::Mechanize->new();
-	my $k;
-	$mech->get( 'https://playserver.in.th/index.php/Server/'.$serverid);
-	my @links = $mech->find_all_links(url_regex => qr/prokud\.*/);
-	for my $link ( @links ) {
-		$k = $link->url;
-	}
-	my @result = split '/', $k;
-	return uri_encode($result[6]);
 }
 
 1;

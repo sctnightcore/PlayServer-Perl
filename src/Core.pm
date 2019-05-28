@@ -7,17 +7,20 @@ use Utils::Var qw( $success_count $fail_count $report_count $report_count_succes
 use Config::IniFiles;
 use Data::Dumper;
 use Win32::Console::ANSI;
-use POSIX qw/strftime/;
+use WWW::Mechanize;
+use URI::Encode qw(uri_encode uri_decode);
+
 
 $|++;
 
 sub Core_Logic {
 	my ($path) = @_;
+	my $us = Utils::Func_us->new();
+	$us->update_Title('PlayServer Vote by sctnightcore');
 	my $cfg = Config::IniFiles->new( -file => "$path/Config/config.ini" ) or die "Failed to create Config::IniFiles object\n";
-	my $url = PlayServer::Func_ps::get_Url($cfg->val('Setting', 'SERVERID'));
+	my $url = get_Url($cfg->val('Setting', 'SERVERID'));
 	my $ps = PlayServer::Func_ps->new( ServerUrl => $url, ServerID => $cfg->val('Setting', 'SERVERID'), GameID => $cfg->val('Setting', 'GAMEID'));
 	my $ac = AntiCaptcha::Func_ac->new( AntiKey => $cfg->val('Setting', 'AntiCaptchakey'));
-	my $us = Utils::Func_us->new();
 	while (1) {
 		$us->update_score();
 		my $balance = $ac->get_Balance();
@@ -59,6 +62,20 @@ sub Core_Logic {
 
 	}
 }
+
+sub get_Url {
+	my ($serverid) = @_;
+	my $mech = WWW::Mechanize->new();
+	my $k;
+	$mech->get( 'https://playserver.in.th/index.php/Server/'.$serverid);
+	my @links = $mech->find_all_links(url_regex => qr/prokud\.*/);
+	for my $link ( @links ) {
+		$k = $link->url;
+	}
+	my @result = split '/', $k;
+	return uri_encode($result[6]);
+}
+
 
 
 1;
