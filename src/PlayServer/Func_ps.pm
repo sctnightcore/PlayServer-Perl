@@ -15,8 +15,15 @@ sub new {
 	$self->{ServerID} = $args{ServerID};
 	$self->{GameID} = $args{GameID};
 	$self->{debug} = $args{Debug};
-	$self->{headers} = HTTP::Headers->new( 'Origin' => 'http://playserver.in.th', 'Referer' => 'http://playserver.in.th/index.php/Vote/prokud/'.$self->{ServerUrl}, 'Content-Type' => 'application/x-www-form-urlencoded; charset=UTF-8');
-	$self->{ua} = LWP::UserAgent->new( agent => 'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.103 Safari/537.36', default_headers => $self->{headers});
+	$self->{headers} = HTTP::Headers->new( 
+		'Origin' => 'http://playserver.in.th', 
+		'Referer' => 'http://playserver.in.th/index.php/Vote/prokud/'.$self->{ServerUrl}, 
+		'Content-Type' => 'application/x-www-form-urlencoded; charset=UTF-8'
+	);
+	$self->{ua} = LWP::UserAgent->new( 
+		agent => 'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.103 Safari/537.36', 
+		default_headers => $self->{headers}
+	);
 	return bless $self, $class;
 }
 
@@ -30,7 +37,7 @@ sub get_Image {
 		my $response_img = $self->{ua}->request($req_img);
 		if ( $response_img->is_success) {
 			if ( $self->{debug} == 1) {
-				printf("\e[36m[DEBUG_PS]->[%s:%s/base64_encode!]\e[0m\n",'GET_IMAGE', $response_checksum_json->{'checksum'});
+				printf("\e[36m[DEBUG_PS]->[%s:%s+base64_encode!]\e[0m\n",'GET_IMAGE', $response_checksum_json->{'checksum'});
 			}
 			return ({
 				checksum => $response_checksum_json->{'checksum'},
@@ -64,12 +71,13 @@ sub send_Image {
 			my ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime();
 			my $time = sprintf('%02d:%02d:%02d',$hour, $min, $sec);
 			printf("[\e[1;37m%s\e[0m] - [\e[1;42;1m%s\e[0m] - [CHECKSUM:%s] - [ANSWER:%s]\n", $time, 'SUCCESS', $checksum, $answer);
+			return 1;
 		} else {
 			my ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime();
 			my $time = sprintf('%02d:%02d:%02d',$hour, $min, $sec);
 			printf("[\e[1;37m%s\e[0m] - [\e[1;41;1m%s\e[0m] - [CHECKSUM:%s] - [ANSWER:%s]\n", $time, 'FAIL', $checksum, $answer);
+			return 0;
 		}
-		return $response_answer_json;
 	} else {
 		print("\e[31m[ERROR]: 503 Service Temporarily Unavailable [cannot get answer json]\e[0m\n");
 		return;

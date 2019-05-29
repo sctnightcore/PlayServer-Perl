@@ -9,7 +9,9 @@ sub new {
 	my $self = {};
 	$self->{key} = $args{AntiKey};
 	$self->{debug} = $args{Debug};
-	$self->{ac} = WebService::AntiCaptcha->new( clientKey => $self->{key} );
+	$self->{ac} = WebService::AntiCaptcha->new( 
+		clientKey => $self->{key} 
+	);
 	return bless $self, $class;
 }
 

@@ -16,13 +16,15 @@ sub __start {
 	my $serverid = $config->val('Setting', 'SERVERID');
 	my $antikey = $config->val('Setting', 'AntiCaptchakey');
 	my $gameid = $config->val('Setting', 'GAMEID');
+	my $debug = $config->val('Setting', 'DEBUG');
 	my $url = get_Url($serverid);
 	my $core = Core_Logic->new( 
 		Path => __DIR__ , 
 		Anticaptcha_key => $antikey, 
 		GameID => $gameid, 
 		ServerUrl => $url, 
-		ServerID => $serverid
+		ServerID => $serverid,
+		Debug => $debug
 	);
 	$core->Main();
 }

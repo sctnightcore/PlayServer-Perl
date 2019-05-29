@@ -17,18 +17,19 @@ sub new {
 	$self->{gameID} = $args{GameID};
 	$self->{ServerUrl} = $args{ServerUrl};
 	$self->{ServerID} = $args{ServerID};
+	$self->{debug} = $args{Debug};
 	$self->{us} = Utils::Func_us->new( 
-		Debug => 0 
+		Debug => $self->{debug}
 	);
 	$self->{ps} = PlayServer::Func_ps->new( 
 		ServerUrl => $self->{ServerUrl}, 
 		ServerID => $self->{ServerID}, 
 		GameID => $self->{gameID}, 
-		Debug => 0
+		Debug => $self->{debug}
 	);
 	$self->{ac} = AntiCaptcha::Func_ac->new( 
 		AntiKey => $self->{antikey}, 
-		Debug => 0
+		Debug => $self->{debug}
 	);
 	return bless $self, $class;
 }
@@ -106,7 +107,7 @@ sub Main {
 			}	
 		} else {
 			sleep(5);
-		}	
+		}
 	}
 }
 
