@@ -7,6 +7,7 @@ sub new {
 	my ($class, %args) = @_;
 	my $self = {};
 	$self->{key} = $args{AntiKey};
+	$self->{debug} = $args{Debug};
 	$self->{ac} = WebService::AntiCaptcha->new( clientKey => $self->{key} );
 	return bless $self, $class;
 }
@@ -14,6 +15,9 @@ sub new {
 sub get_Task {
 	my ($self, $img) = @_;
 	my $res = $self->{ac}->createTask({ type => 'ImageToTextTask', body => $img }) or die $self->{ac}->errstr;
+	if ( $self->{debug} == 1 ) {
+		printf('[DEBUG_AC]->[%s:%s]\n','GET_TASK',$res->{taskId});
+	}
 	return $res->{taskId};
 }
 
@@ -23,6 +27,9 @@ sub get_Answer {
 	foreach (0..$rand) {
 		my $res = $self->{ac}->getTaskResult($taskid) or die $self->{ac}->errstr;
 		if ($res->{status} ne 'processing') {
+			if ( $self->{debug} == 1 ) {
+				printf('[DEBUG_AC]->[%s:%s]\n','GET_ANSWER',$res->{solution}->{text});
+			}
 			return ({
 				answer => $res->{solution}->{text},
 				cost => $res->{cost}
@@ -36,6 +43,9 @@ sub get_Answer {
 sub get_Balance {
 	my ($self) = @_;
 	my $res = $self->{ac}->getBalance() or die $self->{ac}->errstr;
+	if ( $self->{debug} == 1 ) {
+		printf('[DEBUG_AC]->[%s:%s]\n','GET_BALANCE',$res->{balance});
+	}
 	if ($res->{balance} == 0 ) {
 		print "Balance is 0\n";
 		sleep 10;
@@ -47,6 +57,9 @@ sub get_Balance {
 sub report_Taskid {
 	my ($self, $taskid) = @_;
 	my $res = $self->{ac}->reportIncorrectImageCaptcha($taskid) or die $self->{ac}->errstr;
+	if ( $self->{debug} == 1) {
+		printf('[DEBUG_AC]->[%s:%s]\n','REPORT_TASKID',$res->{status});
+	}
 	return $res;
 }
 

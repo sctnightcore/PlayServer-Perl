@@ -15,12 +15,12 @@ $|++;
 
 sub Core_Logic {
 	my ($path) = @_;
-	my $us = Utils::Func_us->new();
+	my $us = Utils::Func_us->new( Debug => 0 );
 	$us->update_Title('PlayServer Vote by sctnightcore');
 	my $cfg = Config::IniFiles->new( -file => "$path/Config/config.ini" ) or die "Failed to create Config::IniFiles object\n";
 	my $url = get_Url($cfg->val('Setting', 'SERVERID'));
-	my $ps = PlayServer::Func_ps->new( ServerUrl => $url, ServerID => $cfg->val('Setting', 'SERVERID'), GameID => $cfg->val('Setting', 'GAMEID'));
-	my $ac = AntiCaptcha::Func_ac->new( AntiKey => $cfg->val('Setting', 'AntiCaptchakey'));
+	my $ps = PlayServer::Func_ps->new( ServerUrl => $url, ServerID => $cfg->val('Setting', 'SERVERID'), GameID => $cfg->val('Setting', 'GAMEID'), Debug => 0 );
+	my $ac = AntiCaptcha::Func_ac->new( AntiKey => $cfg->val('Setting', 'AntiCaptchakey'), Debug => 0 );
 	while (1) {
 		$us->update_score();
 		my $balance = $ac->get_Balance();
