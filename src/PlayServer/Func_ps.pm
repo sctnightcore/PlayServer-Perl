@@ -1,6 +1,7 @@
 package PlayServer::Func_ps;
 use strict;
 use JSON::XS;
+use Win32::Console::ANSI;
 use Data::Dumper;
 use HTTP::Headers;
 use LWP::UserAgent;
@@ -29,18 +30,18 @@ sub get_Image {
 		my $response_img = $self->{ua}->request($req_img);
 		if ( $response_img->is_success) {
 			if ( $self->{debug} == 1) {
-				printf('[DEBUG_PS]->[%s:%s/base64_encode!]\n','GET_IMAGE', $response_checksum_json->{'checksum'});
+				printf("\e[36m[DEBUG_PS]->[%s:%s/base64_encode!]\e[0m\n",'GET_IMAGE', $response_checksum_json->{'checksum'});
 			}
 			return ({
 				checksum => $response_checksum_json->{'checksum'},
 				base64 => encode_base64($response_img->content)
 			});
 		} else {
-			print("[ERROR]: 503 Service Temporarily Unavailable [cannot get img data]\n");
+			print("\e[31m[ERROR]: 503 Service Temporarily Unavailable [cannot get img data]\e[0m\n");
 			return;
 		}
 	} else {
-		print("[ERROR]: 503 Service Temporarily Unavailable [cannot get img json]\n");
+		print("\e[31m[ERROR]: 503 Service Temporarily Unavailable [cannot get img json]\e[0m\n");
 		return;
 	}
 }
@@ -57,11 +58,20 @@ sub send_Image {
 	if ( $response_answer->is_success ) {
 		my $response_answer_json = decode_json($response_answer->decoded_content);
 		if ( $self->{debug} == 1) {
-			printf('[DEBUG_PS]->[%s:%s]\n','SEND_IMAGE', $response_answer_json->{success} ? 'success' : 'fail');
+			printf("\e[36m[DEBUG_PS]->[%s:%s]\e[0m\n",'SEND_IMAGE', $response_answer_json->{success} ? 'success' : 'fail');
+		}
+		if ($response_answer_json->{success}) {
+			my ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime();
+			my $time = sprintf('%02d:%02d:%02d',$hour, $min, $sec);
+			printf("[\e[1;37m%s\e[0m] - [\e[1;42;1m%s\e[0m] - [CHECKSUM:%s] - [ANSWER:%s]\n", $time, 'SUCCESS', $checksum, $answer);
+		} else {
+			my ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime();
+			my $time = sprintf('%02d:%02d:%02d',$hour, $min, $sec);
+			printf("[\e[1;37m%s\e[0m] - [\e[1;41;1m%s\e[0m] - [CHECKSUM:%s] - [ANSWER:%s]\n", $time, 'FAIL', $checksum, $answer);
 		}
 		return $response_answer_json;
 	} else {
-		print("[ERROR]: 503 Service Temporarily Unavailable [cannot get answer json]\n");
+		print("\e[31m[ERROR]: 503 Service Temporarily Unavailable [cannot get answer json]\e[0m\n");
 		return;
 	}
 }

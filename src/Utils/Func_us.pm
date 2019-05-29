@@ -2,6 +2,7 @@ package Utils::Func_us;
 use strict;
 use Utils::Var qw( $success_count $fail_count $report_count $report_count_success $report_count_fail );
 use Win32::Console;
+use Win32::Console::ANSI;
 
 sub new {
 	my ($class, %args) = @_;
@@ -14,7 +15,7 @@ sub new {
 sub update_Title {
 	my ($self, $msg) = @_;
 	if ( $self->{debug} == 1 ) {
-		printf('[DEBUG_US]->[%s:%s]', 'UPDATE_TITLE', $msg);
+		printf("\e[36m[DEBUG_US]->[%s:%s]\e[0m\n", 'UPDATE_TITLE', $msg);
 	}
 	$self->{cs}->Title($msg);
 }
@@ -28,7 +29,7 @@ sub update_score {
 	my $report_fail = defined($report_count_fail) ? $report_count_fail : 0;
 	my $title = sprintf("[ Success: %3s | Fail: %3s ]-----[ By SCTNIGHTCORE ]", $success, $fail);
 	if ( $self->{debug} == 1 ) {
-		printf('[DEBUG_US]->[%s:%s/%s]', 'UPDATE_SCORE', $success, $fail);
+		printf("\e[36m[DEBUG_US]->[%s:%s/%s]\e[0m\n", 'UPDATE_SCORE', $success, $fail);
 	}
 	$self->{cs}->Title($title);
 }

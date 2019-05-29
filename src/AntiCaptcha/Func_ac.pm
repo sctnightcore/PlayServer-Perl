@@ -1,6 +1,7 @@
 package AntiCaptcha::Func_ac;
 use strict;
 use WebService::AntiCaptcha;
+use Win32::Console::ANSI;
 
 
 sub new {
@@ -16,7 +17,7 @@ sub get_Task {
 	my ($self, $img) = @_;
 	my $res = $self->{ac}->createTask({ type => 'ImageToTextTask', body => $img }) or die $self->{ac}->errstr;
 	if ( $self->{debug} == 1 ) {
-		printf('[DEBUG_AC]->[%s:%s]\n','GET_TASK',$res->{taskId});
+		printf('\e[36m[DEBUG_AC]->[%s:%s]\e[0m\n','GET_TASK',$res->{taskId});
 	}
 	return $res->{taskId};
 }
@@ -28,7 +29,7 @@ sub get_Answer {
 		my $res = $self->{ac}->getTaskResult($taskid) or die $self->{ac}->errstr;
 		if ($res->{status} ne 'processing') {
 			if ( $self->{debug} == 1 ) {
-				printf('[DEBUG_AC]->[%s:%s]\n','GET_ANSWER',$res->{solution}->{text});
+				printf('\e[36m[DEBUG_AC]->[%s:%s]\e[0m\n','GET_ANSWER',$res->{solution}->{text});
 			}
 			return ({
 				answer => $res->{solution}->{text},
