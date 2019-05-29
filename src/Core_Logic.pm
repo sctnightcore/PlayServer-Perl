@@ -3,7 +3,7 @@ use strict;
 use AntiCaptcha::Func_ac;
 use PlayServer::Func_ps;
 use Utils::Func_us;
-use Utils::Var qw( $success_count $fail_count $report_count $report_count_success $report_count_fail );
+use Var qw( $success_count $fail_count $report_count $report_count_success $report_count_fail );
 use Data::Dumper;
 use Win32::Console::ANSI;
 use URI::Encode qw(uri_encode uri_decode);

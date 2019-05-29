@@ -1,6 +1,6 @@
 package Utils::Func_us;
 use strict;
-use Utils::Var qw( $success_count $fail_count $report_count $report_count_success $report_count_fail );
+use Var qw( $success_count $fail_count $report_count $report_count_success $report_count_fail );
 use Win32::Console;
 use Win32::Console::ANSI;
 

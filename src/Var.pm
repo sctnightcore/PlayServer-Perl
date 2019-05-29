@@ -1,4 +1,4 @@
-package Utils::Var;
+package Var;
 use strict;
 use warnings;
 use Exporter;
