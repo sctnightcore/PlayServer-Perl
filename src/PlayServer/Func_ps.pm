@@ -71,13 +71,12 @@ sub send_Image {
 			my ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime();
 			my $time = sprintf('%02d:%02d:%02d',$hour, $min, $sec);
 			printf("[\e[1;37m%s\e[0m] - [\e[1;42;1m%s\e[0m] - [CHECKSUM:%s] - [ANSWER:%s]\n", $time, 'SUCCESS', $checksum, $answer);
-			return 1;
 		} else {
 			my ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime();
 			my $time = sprintf('%02d:%02d:%02d',$hour, $min, $sec);
 			printf("[\e[1;37m%s\e[0m] - [\e[1;41;1m%s\e[0m] - [CHECKSUM:%s] - [ANSWER:%s]\n", $time, 'FAIL', $checksum, $answer);
-			return 0;
 		}
+		return $response_answer_json;
 	} else {
 		print("\e[31m[ERROR]: 503 Service Temporarily Unavailable [cannot get answer json]\e[0m\n");
 		return;
