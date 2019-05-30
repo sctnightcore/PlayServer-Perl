@@ -47,7 +47,7 @@ sub get_Balance {
 	my ($self) = @_;
 	my $res = $self->{ac}->getBalance() or die $self->{ac}->errstr;
 	if ( $self->{debug} == 1 ) {
-		printf('[DEBUG_AC]->[%s:%s]\n','GET_BALANCE',$res->{balance});
+		printf('\e[36m[DEBUG_AC]->[%s:%s]\e[0m\n','GET_BALANCE',$res->{balance});
 	}
 	if ($res->{balance} == 0 ) {
 		print "Balance is 0\n";
@@ -61,7 +61,7 @@ sub report_Taskid {
 	my ($self, $taskid) = @_;
 	my $res = $self->{ac}->reportIncorrectImageCaptcha($taskid) or die $self->{ac}->errstr;
 	if ( $self->{debug} == 1) {
-		printf('[DEBUG_AC]->[%s:%s]\n','REPORT_TASKID',$res->{status});
+		printf('\e[36m[DEBUG_AC]->[%s:%s]\e[0m\n','REPORT_TASKID',$res->{status});
 	}
 	return $res;
 }
