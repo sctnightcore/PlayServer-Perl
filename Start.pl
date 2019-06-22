@@ -8,10 +8,6 @@ use lib __DIR__ . "/src";
 use Core_Logic;
 
 sub __start {
-	print "\t===============================\n";
-	print "\tPlayServer Vote by sctnightcore\n";
-	print "\tgithub.com/sctnightcore\n";
-	print "\t===============================\n";
 	my $config = Config::IniFiles->new( -file => __DIR__."/Config/config.ini" ) or die "Failed to create Config::IniFiles object\n";
 	my $serverid = $config->val('Setting', 'SERVERID');
 	my $antikey = $config->val('Setting', 'AntiCaptchakey');
@@ -26,7 +22,7 @@ sub __start {
 		ServerID => $serverid,
 		Debug => $debug
 	);
-	$core->Main();
+	$core->MainLoop();
 }
 __start() unless defined $ENV{INTERPRETER};
 

@@ -54,6 +54,7 @@ if (0) {
 	require Dir::Self;
 	require WWW::Mechanize;
 	require URI::Encode;
+	require Text::Wrap;
 
 }
 
