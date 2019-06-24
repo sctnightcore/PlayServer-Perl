@@ -1,6 +1,7 @@
 package AntiCaptcha::Func_ac;
 use strict;
 use WebService::AntiCaptcha;
+use Var qw($interface);
 use Win32::Console::ANSI;
 
 
@@ -17,10 +18,10 @@ sub new {
 
 sub get_Task {
 	my ($self, $img) = @_;
-	my $res = $self->{ac}->createTask({ type => 'ImageToTextTask', body => $img }) or die $self->{ac}->errstr;
-	if ( $self->{debug} == 1 ) {
-		printf('\e[36m[DEBUG_AC]->[%s:%s]\e[0m\n','GET_TASK',$res->{taskId});
-	}
+	my $res = $self->{ac}->createTask({ 
+		type => 'ImageToTextTask', 
+		body => $img 
+	}) or $interface->writeoutput("[ERROR_get_Task]$self->{ac}->errstr\n");
 	return $res->{taskId};
 }
 
@@ -28,11 +29,8 @@ sub get_Answer {
 	my ($self, $taskid) = @_;
 	my $rand = int(rand(60));
 	foreach (0..$rand) {
-		my $res = $self->{ac}->getTaskResult($taskid) or die $self->{ac}->errstr;
+		my $res = $self->{ac}->getTaskResult($taskid) or $interface->writeoutput("[ERROR_get_Answer]$self->{ac}->errstr\n");
 		if ($res->{status} ne 'processing') {
-			if ( $self->{debug} == 1 ) {
-				printf('\e[36m[DEBUG_AC]->[%s:%s]\e[0m\n','GET_ANSWER',$res->{solution}->{text});
-			}
 			return ({
 				answer => $res->{solution}->{text},
 				cost => $res->{cost}
@@ -45,24 +43,19 @@ sub get_Answer {
 
 sub get_Balance {
 	my ($self) = @_;
-	my $res = $self->{ac}->getBalance() or die $self->{ac}->errstr;
-	if ( $self->{debug} == 1 ) {
-		printf('\e[36m[DEBUG_AC]->[%s:%s]\e[0m\n','GET_BALANCE',$res->{balance});
-	}
-	if ($res->{balance} == 0 ) {
-		print "Balance is 0\n";
-		sleep 10;
+	my $res = $self->{ac}->getBalance() or $interface->writeoutput("[ERROR_get_Balance]$self->{ac}->errstr\n");
+	if ($balance == 0) {
+		$interface->writeoutput("[AntiCaptCha] Balance is 0.\n");
+		$interface->writeoutput("Press ENTER to exit.\n");
+		<STDIN>;
 		exit;
-	}
+	}	
 	return $res->{balance};
 }
 
 sub report_Taskid {
 	my ($self, $taskid) = @_;
-	my $res = $self->{ac}->reportIncorrectImageCaptcha($taskid) or die $self->{ac}->errstr;
-	if ( $self->{debug} == 1) {
-		printf('\e[36m[DEBUG_AC]->[%s:%s]\e[0m\n','REPORT_TASKID',$res->{status});
-	}
+	my $res = $self->{ac}->reportIncorrectImageCaptcha($taskid) or $interface->writeoutput("[ERROR_report_Taskid]$self->{ac}->errstr\n");;
 	return $res;
 }
 

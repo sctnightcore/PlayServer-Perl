@@ -2,12 +2,13 @@ package Core_Logic;
 use strict;
 use AntiCaptcha::Func_ac;
 use PlayServer::Func_ps;
-use Utils::Func_us;
-use Var qw( $success_count $fail_count $report_count $report_count_success $report_count_fail );
+use Time::HiRes qw(time usleep);
+use Interface::Console;
+use Commands;
+use Utils;
+use Var qw(  $success_count $fail_count $report_count $report_count_success $report_count_fail $interface $func_ac $func_ps $quit $gameid $serverid);
 use Data::Dumper;
-use Win32::Console::ANSI;
 use URI::Encode qw(uri_encode uri_decode);
-$|++;
 
 sub new {
 	my ($class, %args) = @_;
@@ -18,97 +19,66 @@ sub new {
 	$self->{ServerUrl} = $args{ServerUrl};
 	$self->{ServerID} = $args{ServerID};
 	$self->{debug} = $args{Debug};
-	$self->{us} = Utils::Func_us->new( 
-		Debug => $self->{debug}
-	);
-	$self->{ps} = PlayServer::Func_ps->new( 
-		ServerUrl => $self->{ServerUrl}, 
-		ServerID => $self->{ServerID}, 
-		GameID => $self->{gameID}, 
-		Debug => $self->{debug}
-	);
-	$self->{ac} = AntiCaptcha::Func_ac->new( 
-		AntiKey => $self->{antikey}, 
-		Debug => $self->{debug}
-	);
+	$serverid = $self->{ServerID};
+	$gameid = $self->{gameID};
 	return bless $self, $class;
 }
 
-
-sub ac_getBalance {
-	my ( $self ) = @_;
-	$self->{ac}->get_Balance();
-}
-
-sub ac_getTask {
-	my ( $self, $img ) = @_;
-	$self->{ac}->get_Task($img);
-}
-
-sub ac_getAnswer {
-	my ( $self, $taskid ) = @_;
-	$self->{ac}->get_Answer($taskid);
-}
-
-sub ac_reportTaskid {
-	my ( $self, $taskid ) = @_;
-	$self->{ac}->report_Taskid($taskid);
-}
-
-sub ps_getImage {
-	my ( $self ) = @_;
-	$self->{ps}->get_Image();
-}
-
-sub ps_sendImage {
-	my ( $self, $answer, $checksum ) = @_;
-	$self->{ps}->send_Image($answer, $checksum);
-}
-
-sub us_updateTitle {
-	my ( $self, $msg ) = @_;
-	$self->{us}->update_Title($msg);
-}
-
-sub us_updateScore {
-	my ( $self ) = @_;
-	$self->{us}->update_score();
-}
-
-sub Main {
-	my ( $self ) = @_;
-	$self->us_updateTitle('PlayServer - Vote by sctnightcore')
-	$self->us_updateScore();
-	while (1) {
-		my $balance = $self->ac_getBalance();
-		my $image = $self->ps_getImage();
-		if (defined($image)) {
-			my $taskID = $self->ac_getTask($image->{base64});
-			my $taskID_res = $self->get_Answer($taskID);
-			my $res_ps = $self->ps_sendImage($taskID_res->{answer}, $image->{checksum});
-			if (defined($res_ps)) {
-				if ( $res_ps->{success} ) {
-					$success_count += 1;
-				} else {
-					$fail_count += 1;
-					my $report = $self->ac_reportTaskid($taskID);
-					if ( $report->{status} eq 'success' && $report->{errorId} == 0 ) {
-						$report_count += 1;
-						$report_count_success += 1;
-					} else {
-						$report_count += 1;
-						$report_count_fail += 1;
+sub MainLoop {
+	my ($self) = @_;
+	$interface = Interface::Console->new();
+	$func_ac = AntiCaptcha::Func_ac->new( AntiKey => $self->{antikey}, Debug => $self->{debug});
+	$func_ps = PlayServer::Func_ps->new( ServerUrl => $self->{ServerUrl}, ServerID => $self->{ServerID}, GameID => $self->{gameID}, Debug => $self->{debug});
+	$interface->title("PlayServer Perl Vote by sctnightcore");
+	$interface->writeoutput("\t===============================\n",'white');
+	$interface->writeoutput("\tPlayServer Vote by sctnightcore\n",'white');
+	$interface->writeoutput("\tgithub.com/sctnightcore\n",'white');
+	$interface->writeoutput("\t===============================\n",'white');
+	Utils::title_count();
+	my $nexttime = 0;
+	while ($quit != 1) {
+		if (defined(my $input = $interface->getInput(0))) {
+			$interface->writeoutput("Commands Input: $input\n");
+		}
+		my $balance = $func_ac->get_Balance();
+		if (time() >= $nexttime) {
+			if (defined(my $image = $func_ps->get_Image())) {
+				Utils::title_count();
+				if (defined(my $imagedata = $func_ps->get_ImageData($image))) {
+					my $taskID = $func_ac->get_Task($imagedata);
+					my $res_TaskID = $func_ac->get_Answer($taskID);
+					if (defined(my $res_sendanswer = $func_ps->send_Image($res_TaskID->{answer}, $image))) {
+						if ($res_sendanswer->{success}) {
+							$success_count += 1;
+							my ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime();
+							my $time = sprintf('%02d:%02d:%02d',$hour, $min, $sec);					
+							my $succes_text = sprintf("[%s] - [%s] - [CHECKSUM:%s] - [ANSWER:%s]\n", $time, 'SUCCESS', $image, $res_TaskID->{answer});
+							$interface->writeoutput($succes_text,'green');
+						} else {
+							#todo
+							$fail_count += 1;
+							my ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime();
+							my $time = sprintf('%02d:%02d:%02d',$hour, $min, $sec);
+							my $fail_text = sprintf("[%s] - [%s] - [CHECKSUM:%s] - [ANSWER:%s]\n", $time, 'FAIL', $image, $res_TaskID->{answer});
+							$interface->writeoutput($fail_text,'red');
+							my $report = $func_ac->report_Taskid($taskID);
+							if ( $report->{status} eq 'success' && $report->{errorId} == 0 ) {
+								$report_count += 1;
+								$report_count_success += 1;
+								$interface->writeoutput("[REPORT-CAPTCHA-SUCCESS] TASKID:$taskID | ANSWER: $res_TaskID->{answer}\n",'green');
+							} else {
+								$report_count += 1;
+								$report_count_fail += 1;
+								$interface->writeoutput("[REPORT-CAPTCHA-FAIL] TASKID:$taskID | ANSWER: $res_TaskID->{answer}\n",'red');
+							}
+						}
+						Utils::title_count();
+						my $timesleep = defined($res_sendanswer->{wait}) ? $res_sendanswer : 61;
+						$nexttime = time() + $timesleep;
 					}
 				}
-				sleep($res_ps->{'wait'});
-				$self->us_updateScore();
-			} else {
-				sleep(5);
-			}	
-		} else {
-			sleep(5);
+			}
 		}
 	}
 }
-
 1;
