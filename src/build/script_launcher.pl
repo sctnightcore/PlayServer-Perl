@@ -55,7 +55,7 @@ if (0) {
 	require WWW::Mechanize;
 	require URI::Encode;
 	require Text::Wrap;
-
+	require Time::HiRes;
 }
 
 $0 = PerlApp::exe() if ($PerlApp::TOOL eq "PerlApp");

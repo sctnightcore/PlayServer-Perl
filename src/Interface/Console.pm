@@ -1,10 +1,13 @@
 package Interface::Console;
 use strict;
 no strict 'refs';
+use Var qw($quit);
 use Time::HiRes qw(time usleep);
+use Win32::Console::ANSI;
 use Text::Wrap;
 use Win32::Console;
-
+our %fgcolors;
+our %bgcolors;
 sub new {
 	my $class = shift;
 	my $self = {
@@ -94,9 +97,9 @@ sub writeoutput  {
 	$self->{out_con}->Cursor($self->{out_col}, $self->{out_line} - $lines);
 
 	if (defined $tag) {
-		$self->{out_con}->Attr($color{$tag});
+		$self->{out_con}->Attr($fgcolors{$tag});
 		$self->{out_con}->Write($message);
-		$self->{out_con}->Attr($color{default});
+		$self->{out_con}->Attr($bgcolors{reset});
 	} else {
 		$self->{out_con}->Write($message);
 	}
@@ -267,4 +270,123 @@ sub readEvents {
 		}
 	}	
 }
+
+sub title {
+	my $self = shift;
+	my $title = shift;
+
+	if (defined $title) {
+		if (!defined $self->{currentTitle} || $self->{currentTitle} ne $title) {
+			$self->{out_con}->Title($title);
+			$self->{currentTitle} = $title;
+		}
+	} else {
+		return $self->{out_con}->Title();
+	}
+}
+
+if (defined($main::ATTR_NORMAL)) {
+
+	%fgcolors = (
+	'reset'		=> $main::ATTR_NORMAL,
+	'default'	=> $main::ATTR_NORMAL,
+	'black'		=> $main::FG_BLACK,
+	'darkgray'	=> FOREGROUND_INTENSITY(),
+	'darkgrey'	=> FOREGROUND_INTENSITY(),
+	'darkred'	=> $main::FG_RED,
+	'red'		=> $main::FG_LIGHTRED,
+	'darkgreen'	=> $main::FG_GREEN,
+	'green'		=> $main::FG_LIGHTGREEN,
+	'brown'		=> $main::FG_BROWN,
+	'yellow'	=> $main::FG_YELLOW,
+	'darkblue'	=> $main::FG_BLUE,
+	'blue'		=> $main::FG_LIGHTBLUE,
+	'darkmagenta'	=> $main::FG_MAGENTA,
+	'magenta'	=> $main::FG_LIGHTMAGENTA,
+	'darkcyan'	=> $main::FG_CYAN,
+	'cyan'		=> $main::FG_LIGHTCYAN,
+	'gray'		=> $main::FG_GRAY,
+	'grey'		=> $main::FG_GRAY,
+	'white'		=> $main::FG_WHITE,
+	);
+} else {
+	%fgcolors = (
+	'reset'		=> $Win32::Console::ATTR_NORMAL,
+	'default'	=> $Win32::Console::ATTR_NORMAL,
+	'black'		=> $Win32::Console::FG_BLACK,
+	'darkgray'	=> FOREGROUND_INTENSITY(),
+	'darkgrey'	=> FOREGROUND_INTENSITY(),
+	'darkred'	=> $Win32::Console::FG_RED,
+	'red'		=> $Win32::Console::FG_LIGHTRED,
+	'darkgreen'	=> $Win32::Console::FG_GREEN,
+	'green'		=> $Win32::Console::FG_LIGHTGREEN,
+	'brown'		=> $Win32::Console::FG_BROWN,
+	'yellow'	=> $Win32::Console::FG_YELLOW,
+	'darkblue'	=> $Win32::Console::FG_BLUE,
+	'blue'		=> $Win32::Console::FG_LIGHTBLUE,
+	'darkmagenta'	=> $Win32::Console::FG_MAGENTA,
+	'magenta'	=> $Win32::Console::FG_LIGHTMAGENTA,
+	'darkcyan'	=> $Win32::Console::FG_CYAN,
+	'cyan'		=> $Win32::Console::FG_LIGHTCYAN,
+	'gray'		=> $Win32::Console::FG_GRAY,
+	'grey'		=> $Win32::Console::FG_GRAY,
+	'white'		=> $Win32::Console::FG_WHITE,
+	);
+}
+
+
+
+#   I  R  G  B
+
+# 128 64 32 16
+
+if (defined($main::BG_BLACK)) {
+
+	%bgcolors = (
+	''		=> $main::BG_BLACK,
+	'default'	=> $main::BG_BLACK,
+	'black'		=> $main::BG_BLACK,
+	'darkgray'	=> BACKGROUND_INTENSITY(),
+	'darkgrey'	=> BACKGROUND_INTENSITY(),
+	'darkred'	=> $main::BG_RED,
+	'red'		=> $main::BG_LIGHTRED,
+	'darkgreen'	=> $main::BG_GREEN,
+	'green'		=> $main::BG_LIGHTGREEN,
+	'brown'		=> $main::BG_BROWN,
+	'yellow'	=> $main::BG_YELLOW,
+	'darkblue'	=> $main::BG_BLUE,
+	'blue'		=> $main::BG_LIGHTBLUE,
+	'darkmagenta'	=> $main::BG_MAGENTA,
+	'magenta'	=> $main::BG_LIGHTMAGENTA,
+	'darkcyan'	=> $main::BG_CYAN,
+	'cyan'		=> $main::BG_LIGHTCYAN,
+	'gray'		=> $main::BG_GRAY,
+	'grey'		=> $main::BG_GRAY,
+	'white'		=> $main::BG_WHITE,
+	);
+} else {
+	%bgcolors = (
+	''		=> $Win32::Console::BG_BLACK,
+	'default'	=> $Win32::Console::BG_BLACK,
+	'black'		=> $Win32::Console::BG_BLACK,
+	'darkgray'	=> BACKGROUND_INTENSITY(),
+	'darkgrey'	=> BACKGROUND_INTENSITY(),
+	'darkred'	=> $Win32::Console::BG_RED,
+	'red'		=> $Win32::Console::BG_LIGHTRED,
+	'darkgreen'	=> $Win32::Console::BG_GREEN,
+	'green'		=> $Win32::Console::BG_LIGHTGREEN,
+	'brown'		=> $Win32::Console::BG_BROWN,
+	'yellow'	=> $Win32::Console::BG_YELLOW,
+	'darkblue'	=> $Win32::Console::BG_BLUE,
+	'blue'		=> $Win32::Console::BG_LIGHTBLUE,
+	'darkmagenta'	=> $Win32::Console::BG_MAGENTA,
+	'magenta'	=> $Win32::Console::BG_LIGHTMAGENTA,
+	'darkcyan'	=> $Win32::Console::BG_CYAN,
+	'cyan'		=> $Win32::Console::BG_LIGHTCYAN,
+	'gray'		=> $Win32::Console::BG_GRAY,
+	'grey'		=> $Win32::Console::BG_GRAY,
+	'white'		=> $Win32::Console::BG_WHITE,
+	);
+}
+
 1;
