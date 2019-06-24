@@ -63,7 +63,7 @@ if ($0 =~ /\.exe$/i) {
 	$ENV{INTERPRETER} = $0;
 }
 
-my $file = 'Start.pl';
+my $file = 'PlayServer-Perl.pl';
 
 if ($ARGV[0] eq '!') {
 	shift;

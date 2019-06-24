@@ -44,7 +44,7 @@ sub get_Answer {
 sub get_Balance {
 	my ($self) = @_;
 	my $res = $self->{ac}->getBalance() or $interface->writeoutput("[ERROR_get_Balance]$self->{ac}->errstr\n");
-	if ($balance == 0) {
+	if ($res->{balance} == 0) {
 		$interface->writeoutput("[AntiCaptCha] Balance is 0.\n");
 		$interface->writeoutput("Press ENTER to exit.\n");
 		<STDIN>;
