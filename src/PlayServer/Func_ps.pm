@@ -2,7 +2,6 @@ package PlayServer::Func_ps;
 use strict;
 use Var qw($interface);
 use JSON::XS;
-use Win32::Console::ANSI;
 use Data::Dumper;
 use HTTP::Headers;
 use LWP::UserAgent;

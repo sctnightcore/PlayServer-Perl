@@ -30,15 +30,15 @@ sub MainLoop {
 	$func_ac = AntiCaptcha::Func_ac->new( AntiKey => $self->{antikey}, Debug => $self->{debug});
 	$func_ps = PlayServer::Func_ps->new( ServerUrl => $self->{ServerUrl}, ServerID => $self->{ServerID}, GameID => $self->{gameID}, Debug => $self->{debug});
 	$interface->title("PlayServer Perl Vote by sctnightcore");
-	$interface->writeoutput("\t===============================\n",'white');
-	$interface->writeoutput("\tPlayServer Vote by sctnightcore\n",'white');
-	$interface->writeoutput("\tgithub.com/sctnightcore\n",'white');
-	$interface->writeoutput("\t===============================\n",'white');
+	$interface->writeoutput("===============================\n",'white');
+	$interface->writeoutput("PlayServer Vote by sctnightcore\n",'white');
+	$interface->writeoutput("github.com/sctnightcore\n",'white');
+	$interface->writeoutput("===============================\n",'white');
 	Utils::title_count();
 	my $nexttime = 0;
 	while ($quit != 1) {
 		if (defined(my $input = $interface->getInput(0))) {
-			$interface->writeoutput("Commands Input: $input\n");
+			Commands::Main($input);
 		}
 		my $balance = $func_ac->get_Balance();
 		if (time() >= $nexttime) {
@@ -50,16 +50,14 @@ sub MainLoop {
 					if (defined(my $res_sendanswer = $func_ps->send_Image($res_TaskID->{answer}, $image))) {
 						if ($res_sendanswer->{success}) {
 							$success_count += 1;
-							my ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime();
-							my $time = sprintf('%02d:%02d:%02d',$hour, $min, $sec);					
-							my $succes_text = sprintf("[%s] - [%s] - [CHECKSUM:%s] - [ANSWER:%s]\n", $time, 'SUCCESS', $image, $res_TaskID->{answer});
+							my ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime();			
+							my $succes_text = sprintf("[%02d:%02d:%02d] - [%s] - [CHECKSUM:%s] - [ANSWER:%s]\n", $hour, $min, $sec, 'SUCCESS', $image, $res_TaskID->{answer});
 							$interface->writeoutput($succes_text,'green');
 						} else {
 							#todo
 							$fail_count += 1;
 							my ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime();
-							my $time = sprintf('%02d:%02d:%02d',$hour, $min, $sec);
-							my $fail_text = sprintf("[%s] - [%s] - [CHECKSUM:%s] - [ANSWER:%s]\n", $time, 'FAIL', $image, $res_TaskID->{answer});
+							my $fail_text = sprintf("[%02d:%02d:%02d] - [%s] - [CHECKSUM:%s] - [ANSWER:%s]\n", $hour, $min, $sec, 'FAIL', $image, $res_TaskID->{answer});
 							$interface->writeoutput($fail_text,'red');
 							my $report = $func_ac->report_Taskid($taskID);
 							if ( $report->{status} eq 'success' && $report->{errorId} == 0 ) {

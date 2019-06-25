@@ -49,7 +49,6 @@ if (0) {
 	require HTTP::Request::Common;
 	require MIME::Base64;
 	require WebService::AntiCaptcha;
-	require Win32::Console::ANSI;
 	require Win32::Console;
 	require Dir::Self;
 	require WWW::Mechanize;
