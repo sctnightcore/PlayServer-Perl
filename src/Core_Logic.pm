@@ -6,7 +6,7 @@ use Time::HiRes qw(time usleep);
 use Interface::Console;
 use Commands;
 use Utils;
-use Var qw(  $success_count $fail_count $report_count $report_count_success $report_count_fail $interface $func_ac $func_ps $quit $gameid $serverid);
+use Var;
 use Data::Dumper;
 use URI::Encode qw(uri_encode uri_decode);
 

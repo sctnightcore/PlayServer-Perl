@@ -1,7 +1,7 @@
 package Utils;
 use strict;
 use warnings;
-use Var qw($success_count $fail_count $report_count $report_count_success $report_count_fail $interface $func_ac $func_ps $quit $gameid $serverid);
+use Var;
 
 sub title_count {
 	my $success = defined($success_count) ? $success_count : 0;
@@ -12,4 +12,8 @@ sub title_count {
     $interface->title("[ GameID: $gameid | ServerID: $serverid ]-[ Success: $success | Fail: $fail ]");
 }
 
+
+sub Logic_Start {
+
+}
 1;

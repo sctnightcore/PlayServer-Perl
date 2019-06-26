@@ -1,5 +1,5 @@
 package Commands;
-use Var qw($success_count $fail_count $report_count $report_count_success $report_count_fail $interface $func_ac $func_ps $quit);
+use Var;
 
 sub Main {
     if ($_[0] eq 'sc') {
