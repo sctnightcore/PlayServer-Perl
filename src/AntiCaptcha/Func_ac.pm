@@ -1,7 +1,7 @@
 package AntiCaptcha::Func_ac;
 use strict;
 use WebService::AntiCaptcha;
-use Var qw($interface);
+use Var;
 
 sub new {
 	my ($class, %args) = @_;
@@ -69,10 +69,11 @@ sub report_Taskid {
 
 sub get_QueueStats {
 	my ($self) = @_;
-	my $res = $self->{ac}->queueId(1) or $interface->writeoutput("[ERROR_report_Taskid]")
+	my $res = $self->{ac}->queueId(1);
 	unless($res) {
 		$interface->writeoutput("[ERROR_get_QueueStats] $self->{ac}->errstr\n");
+	} else {
+		return $res;
 	}
-	return $res;
 }
 1;

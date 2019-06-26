@@ -99,7 +99,7 @@ sub writeoutput  {
 	if (defined $tag) {
 		$self->{out_con}->Attr($fgcolors{$tag});
 		$self->{out_con}->Write($message);
-		$self->{out_con}->Attr($bgcolors{reset});
+		$self->{out_con}->Attr($fgcolors{reset});
 	} else {
 		$self->{out_con}->Write($message);
 	}

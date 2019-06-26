@@ -2,7 +2,7 @@ package Var;
 use strict;
 use warnings;
 use Exporter qw(import);
-our @EXPORT = qw($success_count $fail_count $report_count $report_count_success $report_count_fail $interface $func_ac $func_ps $quit $gameid $serverid $config);
+our @EXPORT = qw($success_count $fail_count $report_count $report_count_success $report_count_fail $interface $func_ac $func_ps $quit $gameid $serverid $config $path $serverurl $nexttimeformat);
 
 our $interface;
 our $func_ac;
@@ -13,11 +13,13 @@ our $report_count;
 our $report_count_success;
 our $report_count_fail;
 our $quit;
-
+our $path;
+our $nexttimeformat;
 #config
 our $config;
 #user info
 our $gameid;
 our $serverid;
+our $serverurl;
 
 1;
