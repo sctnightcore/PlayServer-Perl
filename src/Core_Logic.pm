@@ -71,17 +71,27 @@ sub MainLoop {
 sub Logic_Start {
 	my ( $self ) = @_;
 	$interface = Interface::Console->new();
-	$config = Config::IniFiles->new( -file => "/Config/config.ini" ) or die "Failed to create Config::IniFiles object\n";
-	$serverid = $config->val('Setting', 'SERVERID');
-	$gameid = $config->val('Setting', 'GAMEID');
 	$interface->title("PlayServer Perl Vote by sctnightcore");
 	$interface->writeoutput("===============================\n",'white');
 	$interface->writeoutput("PlayServer Vote by sctnightcore\n",'white');
 	$interface->writeoutput("github.com/sctnightcore\n",'white');
 	$interface->writeoutput("===============================\n",'white');
+	$interface->writeoutput("Get Server Url...",'white');
+	$config = Config::IniFiles->new( -file => "/Config/config.ini" ) or die "Failed to create Config::IniFiles object\n";
+	$serverid = $config->val('Setting', 'SERVERID');
+	$gameid = $config->val('Setting', 'GAMEID');
 	$serverurl = Utils::get_Url($serverid);
-	$func_ac = AntiCaptcha::Func_ac->new( AntiKey => $config->val('Setting', 'AntiCaptchakey'), Debug => 0);
-	$func_ps = PlayServer::Func_ps->new( ServerUrl => $serverurl, ServerID => $serverid, GameID => $gameid, Debug => 0);
-	title_count();
+	if (defined $serverurl) {
+		$interface->writeoutput("[SUCCESS]\n",'green');
+		$func_ac = AntiCaptcha::Func_ac->new( AntiKey => $config->val('Setting', 'AntiCaptchakey'), Debug => 0);
+		$func_ps = PlayServer::Func_ps->new( ServerUrl => $serverurl, ServerID => $serverid, GameID => $gameid, Debug => 0);
+		title_count();
+	} else {
+		$interface->writeoutput("[FAIL]\n",'red');
+		$interface->writeoutput("Press ENTER to exit.\n");
+		<STDIN>;
+		exit;
+	}
 }
+
 1;
