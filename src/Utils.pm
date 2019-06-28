@@ -19,23 +19,6 @@ sub title_count {
     $interface->title("[ GameID: $gameid | ServerID: $serverid ]-[ Success: $success | Fail: $fail ]");
 }
 
-
-sub Logic_Start {
-	$config = Config::IniFiles->new( -file => $path."/Config/config.ini" ) or die "Failed to create Config::IniFiles object\n";
-	$serverid = $config->val('Setting', 'SERVERID');
-	$gameid = $config->val('Setting', 'GAMEID');
-	$interface = Interface::Console->new();
-	$interface->title("PlayServer Perl Vote by sctnightcore");
-	$interface->writeoutput("===============================\n",'white');
-	$interface->writeoutput("PlayServer Vote by sctnightcore\n",'white');
-	$interface->writeoutput("github.com/sctnightcore\n",'white');
-	$interface->writeoutput("===============================\n",'white');
-	$serverurl = get_Url($config->val('Setting', 'SERVERID'));
-	$func_ac = AntiCaptcha::Func_ac->new( AntiKey => $config->val('Setting', 'AntiCaptchakey'), Debug => 0);
-	$func_ps = PlayServer::Func_ps->new( ServerUrl => $serverurl, ServerID => $serverid, GameID => $gameid, Debug => 0);
-	title_count();
-}
-
 sub get_Url {
 	my ($serverid) = @_;
 	my $mech = WWW::Mechanize->new();
