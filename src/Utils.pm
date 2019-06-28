@@ -4,10 +4,6 @@ use warnings;
 use WWW::Mechanize;
 use Data::Dumper;
 use URI::Encode qw(uri_encode uri_decode);
-use Config::IniFiles;
-use AntiCaptcha::Func_ac;
-use PlayServer::Func_ps;
-use Interface::Console;
 use Var;
 
 sub title_count {
