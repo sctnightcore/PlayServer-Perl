@@ -77,7 +77,7 @@ sub Logic_Start {
 	$interface->writeoutput("github.com/sctnightcore\n",'white');
 	$interface->writeoutput("===============================\n",'white');
 	$interface->writeoutput("Get Server Url...",'white');
-	$config = Config::IniFiles->new( -file => "/Config/config.ini" ) or die "Failed to create Config::IniFiles object\n";
+	$config = Config::IniFiles->new( -file => "$self->{path}/Config/config.ini" ) or die "Failed to create Config::IniFiles object\n";
 	$serverid = $config->val('Setting', 'SERVERID');
 	$gameid = $config->val('Setting', 'GAMEID');
 	$serverurl = Utils::get_Url($serverid);
