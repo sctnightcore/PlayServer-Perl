@@ -76,7 +76,9 @@ sub Logic_Start {
 	$interface->writeoutput("PlayServer Vote by sctnightcore\n",'white');
 	$interface->writeoutput("github.com/sctnightcore\n",'white');
 	$interface->writeoutput("===============================\n",'white');
-	$interface->writeoutput("Get Server Url...",'white');
+	my ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime();
+	my $timeformat = sprintf("[%02d:%02d:%02d]",$hour,$min,$sec);
+	$interface->writeoutput("$timeformat Get Server Url...",'white');
 	$config = Config::IniFiles->new( -file => "$self->{path}/Config/config.ini" ) or die "Failed to create Config::IniFiles object\n";
 	$serverid = $config->val('Setting', 'SERVERID');
 	$gameid = $config->val('Setting', 'GAMEID');
@@ -85,7 +87,7 @@ sub Logic_Start {
 		$interface->writeoutput("[SUCCESS]\n",'green');
 		$func_ac = AntiCaptcha::Func_ac->new( AntiKey => $config->val('Setting', 'AntiCaptchakey'), Debug => 0);
 		$func_ps = PlayServer::Func_ps->new( ServerUrl => $serverurl, ServerID => $serverid, GameID => $gameid, Debug => 0);
-		title_count();
+		Utils::title_count();
 	} else {
 		$interface->writeoutput("[FAIL]\n",'red');
 		$interface->writeoutput("Press ENTER to exit.\n");
