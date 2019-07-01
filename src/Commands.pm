@@ -10,6 +10,12 @@ sub Main {
         $msg .= "Fail: $fail_count\n";
         $msg .= "========================\n";
         $interface->writeoutput($msg);
+    } elsif ( $_[0] eq 'exit') {
+        $interface->writeoutput("Press ENTER to exit.\n");
+        <STDIN>;
+        exit;
+    } else {
+        $interface->writeoutput("UNKNOWN COMMAND: $_[0]\n");
     }
 
 }

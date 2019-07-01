@@ -25,8 +25,8 @@ sub MainLoop {
 		if (defined(my $input = $interface->getInput(0))) {
 			Commands::Main($input);
 		}
-		my $balance = $func_ac->get_Balance();
 		if (time() >= $nexttime) {
+			my $balance = $func_ac->get_Balance();
 			Utils::title_count();
 			if (defined(my $image = $func_ps->get_Image())) {
 				if (defined(my $imagedata = $func_ps->get_ImageData($image))) {
