@@ -1,6 +1,6 @@
 package PlayServer::Func_ps;
 use strict;
-use Var qw($interface);
+use Var;
 use JSON::XS;
 use Data::Dumper;
 use HTTP::Headers;
