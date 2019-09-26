@@ -1,4 +1,4 @@
-Perl - PlayServer Client
+Perl - PlayServer Client  [ หยุดพัฒนาแล้ว ] 
 ========
 It is custom client for playserver.in.th
 ## Usage
